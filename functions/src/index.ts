@@ -102,6 +102,6 @@ async function removeItem(item: ItemDocumentData) {
   const doc = await getOrCreateDay(user, day);
   const dayData = await getDayData(doc);
   if (dayData) {
-    await doc.update({ items: dayData.items.filter(i => i.uid === item.uid) });
+    await doc.update({ items: dayData.items.filter(i => i.uid !== item.uid) });
   }
 }
