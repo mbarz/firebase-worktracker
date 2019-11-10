@@ -4,6 +4,10 @@
   </h1>
 </div>
 
+<div class="content-area" *ngIf="summary$ | async as summary">
+  <pre>{{ summary | json }}</pre>
+</div>
+
 <div class="content-area" *ngIf="currentDay$ | async as day">
   <mat-card>
     <div>
