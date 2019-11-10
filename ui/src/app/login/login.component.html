@@ -1,0 +1,16 @@
+<mat-card class="login-card">
+  <mat-card-header>
+    <mat-card-title>Login</mat-card-title>
+  </mat-card-header>
+  <mat-card-actions class="login-methods">
+    <button
+      *ngFor="let method of loginMethods"
+      mat-button
+      (click)="method.fn()"
+      [ngClass]="method.key"
+    >
+      <mat-icon fontSet="fab" [fontIcon]="method.icon"></mat-icon>
+      {{ method.text }}
+    </button>
+  </mat-card-actions>
+</mat-card>

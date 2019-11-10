@@ -1,0 +1,13 @@
+<div class="main-header mat-elevation-z6" *ngIf="afAuth.user | async as user">
+  <nav>
+    <a mat-button routerLink="/" routerLinkActive="active">Worktracker</a>
+    <a mat-button routerLink="/items" routerLinkActive="active">Items</a>
+  </nav>
+  <div class="spacer"></div>
+  <span class="user-name">{{ user.displayName }}</span>
+  <button mat-button (click)="logout()">
+    Logout
+  </button>
+</div>
+
+<router-outlet></router-outlet>

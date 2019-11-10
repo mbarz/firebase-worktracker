@@ -1,0 +1,108 @@
+<div class="sub-header">
+  <h1>Items</h1>
+</div>
+
+<div class="content-area">
+  <form [formGroup]="formGroup" (submit)="onSubmit()">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Create a new Item</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="input-container">
+          <mat-form-field>
+            <input matInput placeholder="title" formControlName="title" />
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="category" formControlName="category" />
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              placeholder="Choose a date"
+              formControlName="date"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              matInput
+              placeholder="start"
+              formControlName="start"
+              type="time"
+            />
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              matInput
+              placeholder="end"
+              formControlName="end"
+              type="time"
+            />
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button
+          mat-flat-button
+          color="primary"
+          type="submit"
+          [disabled]="!formGroup.valid"
+        >
+          save
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </form>
+</div>
+
+<div *ngIf="false">
+  <h2>Items from Firestore</h2>
+  <div *ngFor="let item of items$ | async">
+    <pre>{{ item | json }}</pre>
+    <button mat-button type="button" (click)="delete(item)">
+      Delete
+    </button>
+  </div>
+</div>
+
+<div class="content-area">
+  <h2>Days from Firestore</h2>
+  <mat-card *ngFor="let day of days$ | async" class="day">
+    <mat-card-header>
+      <mat-card-title>{{ day.day }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table>
+        <caption></caption>
+        <thead>
+          <tr>
+            <th id="category">category</th>
+            <th id="title">title</th>
+            <th id="start">start</th>
+            <th id="end">end</th>
+            <th scope="actions"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of day.items">
+            <td>{{ item.title }}</td>
+            <td>{{ item.category }}</td>
+            <td>{{ item.start | date: 'HH:mm' }}</td>
+            <td>{{ item.end | date: 'HH:mm' }}</td>
+            <td>
+              <button mat-stroked-button type="button" (click)="delete(item)">
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>

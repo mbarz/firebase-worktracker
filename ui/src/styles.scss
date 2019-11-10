@@ -1,0 +1,79 @@
+@import '~@fortawesome/fontawesome-free/css/all.css';
+
+@import '~@angular/material/theming';
+@include mat-core();
+$primary: mat-palette($mat-blue-grey);
+$accent: mat-palette($mat-teal, A200, A100, A400);
+$theme: mat-light-theme($primary, $accent);
+@include angular-material-theme($theme);
+
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+  background-color: #fafafa;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 56px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.content-area {
+  padding: 10px;
+}
+
+.main-header {
+  background: mat-color($primary);
+  color: white;
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  .user-name {
+    line-height: 36px;
+  }
+}
+.sub-header {
+  background: mat-color($primary);
+  color: white;
+  padding-left: 20px;
+  h1 {
+    font-weight: 300;
+    margin: 0;
+    padding: 28px 8px;
+    font-size: 20px;
+    color: #fff;
+  }
+}
+
+.spacer {
+  flex: 1;
+}
+
+.mat-icon.fab {
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+}

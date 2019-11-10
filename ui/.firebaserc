@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "worktracker-8404d": {
+      "hosting": {
+        "firebase-worktracker-ui": [
+          "worktracker-8404d"
+        ]
+      }
+    }
+  }
+}

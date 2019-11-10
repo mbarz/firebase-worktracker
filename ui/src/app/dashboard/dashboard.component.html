@@ -1,0 +1,43 @@
+<div class="sub-header">
+  <h1>
+    Dashboard
+  </h1>
+</div>
+
+<div class="content-area" *ngIf="currentDay$ | async as day">
+  <mat-card>
+    <div>
+      {{ day.duration.milliseconds | duration }} of
+      {{ day.target.milliseconds | duration }}
+    </div>
+    <mat-progress-bar
+      mode="determinate"
+      [value]="day.percentage"
+    ></mat-progress-bar>
+    <table>
+      <caption></caption>
+      <thead>
+        <tr>
+          <th id="category">category</th>
+          <th id="title">title</th>
+          <th id="start">start</th>
+          <th id="end">end</th>
+          <th scope="actions"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of day.items">
+          <td>{{ item.title }}</td>
+          <td>{{ item.category }}</td>
+          <td>{{ item.start | date: 'HH:mm' }}</td>
+          <td>{{ item.end | date: 'HH:mm' }}</td>
+          <td>
+            <button mat-stroked-button type="button" (click)="deleteItem(item)">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-card>
+</div>

@@ -1,0 +1,19 @@
+{
+  "hosting": [
+    {
+      "target": "firebase-worktracker-ui",
+      "public": "dist/firebase-worktracker-ui",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  ]
+}
