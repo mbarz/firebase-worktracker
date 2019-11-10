@@ -31,7 +31,6 @@ async function getOrCreateDay(
   user: string,
   day: string
 ): Promise<FirebaseFirestore.DocumentReference> {
-  console.log(day);
   const doc = firestore.collection(`userData/${user}/days`).doc(day);
   const snap = await doc.get();
   if (!snap.exists) {
