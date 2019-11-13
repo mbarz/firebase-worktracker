@@ -1,7 +1,6 @@
-export type ItemDocumentData = {
+export type Item = {
   uid: string;
   title: string;
-  user: string;
   category: string;
   start: string;
   end: string;

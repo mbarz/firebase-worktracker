@@ -1,6 +1,5 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
-import { DayDocumentData } from './day';
 const firestore = admin.firestore();
 
 export type Summary = {
@@ -9,10 +8,10 @@ export type Summary = {
 
 export const onDayCreation = functions.firestore
   .document('userData/{user}/days/{day}')
-  .onCreate(async event => {
-    const dayData = event.data() as DayDocumentData;
-    const day = dayData.day;
-    const doc = await getOrCreateSummary(dayData.user);
+  .onCreate(async (event, context) => {
+    const user: string = context.params['user'];
+    const day: string = context.params['day'];
+    const doc = await getOrCreateSummary(user);
     const data = await getSummaryData(doc);
     await setSummaryData(doc, { ...data, days: [...data.days, day] });
   });
