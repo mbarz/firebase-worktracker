@@ -1,13 +1,7 @@
-import * as admin from 'firebase-admin';
-import { WritableDocument } from './document';
-const firestore = admin.firestore();
+import { WritableDocument } from '../documents/document';
 
 export class FirestoreDocument<T> implements WritableDocument<T> {
-  doc: FirebaseFirestore.DocumentReference;
-
-  constructor(collection: string, name: string) {
-    this.doc = firestore.collection(collection).doc(name);
-  }
+  constructor(private readonly doc: FirebaseFirestore.DocumentReference) {}
 
   exists() {
     return this.doc.get().then(snap => snap.exists);
