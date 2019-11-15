@@ -41,7 +41,7 @@ import { FirestoreSettingsToken } from '@angular/fire/firestore';
       provide: FirestoreSettingsToken,
       useValue: environment.production
         ? undefined
-        : { host: 'localhost:8080', ssl: false }
+        : { host: 'localhost:8888', ssl: false }
     }
   ],
   bootstrap: [AppComponent]
