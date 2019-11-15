@@ -1,10 +1,14 @@
 import { DocumentService, WritableDocument } from '../documents';
 import { InMemoryDocument } from './in-memory-document';
 
+type Memory = {
+  [path: string]: {
+    [name: string]: any;
+  };
+};
+
 export class InMemoryDocumentService implements DocumentService {
-  constructor(
-    private memory: { [path: string]: { [name: string]: any } } = {}
-  ) {}
+  constructor(private memory: Memory = {}) {}
   getOrCreateDocument<T>(args: {
     path: string;
     name: string;
@@ -18,14 +22,6 @@ export class InMemoryDocumentService implements DocumentService {
     return Promise.resolve(doc);
   }
 
-  getDocumentPaths() {
-    return Object.keys(this.memory)
-      .map(path =>
-        Object.keys(this.memory[path]).map(name => `${path}/${name}`)
-      )
-      .reduce((a, b) => [...a, ...b], []);
-  }
-
   getDocument<T>(args: { path: string; name: string }) {
     const data = (this.memory[args.path] || {})[args.name];
     if (!data) {
@@ -35,5 +31,13 @@ export class InMemoryDocumentService implements DocumentService {
     } else {
       return Promise.resolve(new InMemoryDocument<T>(data));
     }
+  }
+
+  getState() {
+    return this.memory;
+  }
+
+  setState(state: Memory) {
+    this.memory = state;
   }
 }
