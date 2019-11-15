@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { from, Observable, of } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { switchMap, take, map } from 'rxjs/operators';
 import { ItemDTO } from './item';
 
 @Injectable({
@@ -26,8 +26,16 @@ export class ItemsService {
   }
 
   createItem(item: ItemDTO) {
-    const doc = this.collection(item.user).doc(item.uid);
-    return from(doc.set(item, { merge: false }));
+    return this.auth.user.pipe(
+      map(user => {
+        if (!user) {
+          throw new Error('Must be logged in to create item');
+        }
+        console.log(`creating item as ${user.uid}`);
+        const doc = this.collection(user.uid).doc(item.uid);
+        return doc.set(item, { merge: false });
+      })
+    );
   }
 
   private collection(user: string) {
@@ -35,7 +43,14 @@ export class ItemsService {
   }
 
   deleteItem(item: ItemDTO) {
-    const doc = this.collection(item.user).doc(item.uid);
-    return from(doc.delete());
+    return this.auth.user.pipe(
+      map(user => {
+        if (!user) {
+          throw new Error('Must be logged in to delete item');
+        }
+        const doc = this.collection(user.uid).doc(item.uid);
+        return doc.delete();
+      })
+    );
   }
 }

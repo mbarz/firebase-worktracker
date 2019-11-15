@@ -61,28 +61,29 @@ export class ItemListComponent implements OnInit {
 
   onSubmit() {
     const value = this.getFormValue();
-    const start = new Date(value.date);
-    const end = new Date(value.date);
-    start.setHours(...this.parseTime(value.start));
-    end.setHours(...this.parseTime(value.end));
+
+    const d = value.date.getDate();
+    const m = value.date.getMonth();
+    const y = value.date.getFullYear();
+    const date = [
+      y.toString().padStart(4, '0'),
+      m.toString().padStart(2, '0'),
+      d.toString().padStart(2, '0')
+    ].join('-');
+
     const item: ItemDTO = {
       uid: shortid.generate(),
       title: value.title,
       category: value.category,
-      user: value.user,
-      start: start.toISOString(),
-      end: end.toISOString()
+      date,
+      start: value.start,
+      end: value.end
     };
-    return this.itemsService.createItem(item);
+    return this.itemsService.createItem(item).subscribe();
   }
 
   delete(item: any) {
-    return this.itemsService.deleteItem(item);
-  }
-
-  private parseTime(time: string): [number, number, number, number] {
-    const arr = time.split(':').map(s => parseInt(s, 10));
-    return [arr[0], arr[1], 0, 0];
+    return this.itemsService.deleteItem(item).subscribe();
   }
 
   private patchFormValue(value: Partial<FormValue>) {
