@@ -1,7 +1,7 @@
 import { DayService } from './day-service';
-import { Day } from './model';
-import { createFakeItem } from './testing/fake-item';
-import { InMemoryDocumentService } from './testing/in-memory-document-service';
+import { Day } from '../model';
+import { createFakeItem } from '../testing/fake-item';
+import { InMemoryDocumentService } from '../testing/in-memory-document-service';
 
 describe('DayService', () => {
   let documentService: InMemoryDocumentService;

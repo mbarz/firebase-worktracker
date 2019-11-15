@@ -1,8 +1,22 @@
-import { DocumentService } from './documents';
-import { Day, Item } from './model';
+import { DocumentService } from '../documents';
+import { Day, Item } from '../model';
+import { AppEventProxy } from '../event';
+import * as itemEvents from '../items/item-events';
 
 export class DayService {
   constructor(private readonly documentService: DocumentService) {}
+
+  observe(eventProxy: AppEventProxy) {
+    eventProxy.on(itemEvents.createItemCreationEvent, ({ item, user }) =>
+      this.addItemToDay({ item, user })
+    );
+    eventProxy.on(itemEvents.createItemDeletionEvent, ({ item, user }) =>
+      this.removeItemFromDay({ item, user })
+    );
+    eventProxy.on(itemEvents.createItemUpdateEvent, ({ item, user }) =>
+      this.updateItemInDay({ item, user })
+    );
+  }
 
   async addItemToDay({ item, user }: { item: Item; user: string }) {
     const doc = await this.getOrCreateDocumentForItem(user, item);

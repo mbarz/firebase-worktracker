@@ -1,7 +1,6 @@
-import { App } from './app';
-import { DayService } from './day-service';
+import { DayService } from './days/day-service';
 import { AppEventProxy } from './event';
-import * as events from './item-events';
+import * as events from './items/item-events';
 import { InMemoryDocumentService } from './testing/in-memory-document-service';
 
 describe('App', () => {
@@ -12,7 +11,7 @@ describe('App', () => {
     proxy = new AppEventProxy();
     documentService = new InMemoryDocumentService();
     dayService = new DayService(documentService);
-    new App(proxy, dayService).init();
+    dayService.observe(proxy);
   });
   it('should create day, when item is created', async () => {
     const item = {

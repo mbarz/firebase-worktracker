@@ -1,6 +1,9 @@
-import { Day } from './day';
-
 export type Month = {
   uid: string;
-  days: Day[];
+  days: {
+    uid: string;
+    target: { minutes: number };
+    reached: { minutes: number };
+  }[];
+  categories: { uid: string; tracked: { minutes: number } }[];
 };

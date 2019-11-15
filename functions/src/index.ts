@@ -1,32 +1,31 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
-import { DayService } from './day-service';
+import { DayService } from './days/day-service';
 import { AppEventProxy } from './event';
-import * as events from './item-events';
+import * as events from './items/item-events';
 import { FirestoreDocumentService } from './firestore';
 import { Item } from './model';
-import { App } from './app';
 
 admin.initializeApp();
 const firestore = admin.firestore();
 
-const documentService = new FirestoreDocumentService(firestore);
-const dayService = new DayService(documentService);
 const proxy = new AppEventProxy();
-new App(proxy, dayService).init();
-console.log('initialized app');
+
+const documentService = new FirestoreDocumentService(firestore);
+new DayService(documentService).observe(proxy);
+
+console.log('===============================');
 
 export const onItemCreation = functions.firestore
   .document('userData/{user}/items/{documentId}')
-  .onCreate((event, context) => {
-    console.log(`${context.resource.name} changed`);
+  .onCreate((event, context) =>
     proxy.dispatch(
       events.createItemCreationEvent({
         item: event.data() as Item,
         user: context.params['user']
       })
-    );
-  });
+    )
+  );
 
 export const onItemUpdate = functions.firestore
   .document('userData/{user}/items/{documentId}')
@@ -49,3 +48,15 @@ export const onItemDeletion = functions.firestore
       })
     )
   );
+
+export const onDayCreation = functions.firestore
+  .document('userData/{user}/days/{day}')
+  .onCreate((event, context) => {
+    console.log(context.resource.name, 'created');
+  });
+
+export const onDayUpdate = functions.firestore
+  .document('userData/{user}/days/{day}')
+  .onUpdate((event, context) => {
+    console.log(context.resource.name, 'updated');
+  });

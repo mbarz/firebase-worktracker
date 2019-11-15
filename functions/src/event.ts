@@ -91,6 +91,7 @@ export class AppEventProxy {
     for (const listener of this.listeners) {
       listener.fn(event);
     }
+    return event;
   }
 
   attachListener(listener: EventListener) {

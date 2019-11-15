@@ -1,5 +1,5 @@
-import { createEventFactory, props } from './event';
-import { Item } from './model';
+import { createEventFactory, props } from '../event';
+import { Item } from '../model';
 
 export const createItemCreationEvent = createEventFactory(
   'itemCreation',
