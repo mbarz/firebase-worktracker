@@ -7,6 +7,8 @@ import { FirestoreDocumentService } from './firestore';
 import * as itemEvents from './items/item-events';
 import { Day, Item, Month } from './model';
 import * as monthEvents from './months/month-events';
+import { MonthService } from './months/month-service';
+import { SummaryService } from './summary/summary-service';
 
 admin.initializeApp();
 const firestore = admin.firestore();
@@ -15,6 +17,8 @@ const proxy = new AppEventProxy();
 
 const documentService = new FirestoreDocumentService(firestore);
 new DayService(documentService).observe(proxy);
+new MonthService(documentService).observe(proxy);
+new SummaryService(documentService).observe(proxy);
 
 console.log('===============================');
 

@@ -82,6 +82,7 @@ export class MonthService {
   }
 
   private async getMonthDocumentForDay(user: string, month: string) {
+    console.log('getting', month);
     return await this.documentService.getOrCreateDocument<Month>({
       path: `userData/${user}/months`,
       name: month,

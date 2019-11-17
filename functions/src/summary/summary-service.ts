@@ -29,11 +29,6 @@ export class SummaryService {
       .map(d => d.reached.minutes - d.target.minutes)
       .forEach(diff => (m.balance.minutes += diff));
 
-    summary.balance.minutes = summary.trackedMonths.reduce(
-      (a, b) => a + b.balance.minutes,
-      0
-    );
-
     return doc.setData(summary);
   }
 
@@ -53,7 +48,7 @@ export class SummaryService {
     return await this.documentService.getOrCreateDocument<Summary>({
       path: `userData`,
       name: user,
-      defaultData: { balance: { minutes: 0 }, trackedMonths: [] }
+      defaultData: { trackedMonths: [] }
     });
   }
 }

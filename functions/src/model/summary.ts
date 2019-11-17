@@ -6,6 +6,5 @@ export type MonthTrackingSummary = {
 };
 
 export type Summary = {
-  balance: { minutes: number };
   trackedMonths: MonthTrackingSummary[];
 };

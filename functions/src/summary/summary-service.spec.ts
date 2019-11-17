@@ -34,7 +34,6 @@ describe('Summary', () => {
     expect(ds.getState()).toEqual({
       userData: {
         max: {
-          balance: { minutes: 60 },
           trackedMonths: [{ uid: '2019-10', balance: { minutes: 60 } }]
         }
       }
@@ -64,7 +63,6 @@ describe('Summary', () => {
     expect(ds.getState()).toEqual({
       userData: {
         max: {
-          balance: { minutes: 30 },
           trackedMonths: [
             { uid: '2019-10', balance: { minutes: 60 } },
             { uid: '2019-11', balance: { minutes: -30 } }
