@@ -1,4 +1,3 @@
-export * from './category';
 export * from './day';
 export * from './item';
 export * from './month';
