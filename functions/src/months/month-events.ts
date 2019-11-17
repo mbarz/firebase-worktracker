@@ -1,4 +1,4 @@
-import { createEventFactory, props } from '../event';
+import { createEventFactory, props } from '../event-proxy';
 import { Month } from '../model';
 
 export const createMonthUpdateEvent = createEventFactory(

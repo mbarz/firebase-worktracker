@@ -1,4 +1,4 @@
-import { createEventFactory, props, AppEventProxy } from './event';
+import { createEventFactory, props, AppEventProxy } from './event-proxy';
 
 describe('EventProxy', () => {
   it('should listen on events', () => {
@@ -18,8 +18,12 @@ describe('EventProxy', () => {
     const eventsOfTypeA: ReturnType<typeof factoryA>[] = [];
     const eventsOfTypeB: ReturnType<typeof factoryB>[] = [];
 
-    const listenerA = proxy.on(factoryA, event => eventsOfTypeA.push(event));
-    proxy.on(factoryB, event => eventsOfTypeB.push(event));
+    const listenerA = proxy.on(factoryA, async event => {
+      eventsOfTypeA.push(event);
+    });
+    proxy.on(factoryB, async event => {
+      eventsOfTypeB.push(event);
+    });
 
     events.forEach(e => proxy.dispatch(e));
 

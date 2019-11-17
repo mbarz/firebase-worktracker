@@ -1,4 +1,4 @@
-import { createEventFactory, props } from '../event';
+import { createEventFactory, props } from '../event-proxy';
 import { Day } from '../model';
 
 export const createDayUpdateEvent = createEventFactory(

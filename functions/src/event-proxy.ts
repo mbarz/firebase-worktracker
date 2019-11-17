@@ -62,7 +62,7 @@ export function createEventFactory<T extends string, P extends object>(
 
 export class EventListener {
   constructor(
-    public fn: (event: AppEvent) => void,
+    public fn: (event: AppEvent) => Promise<any>,
     public detach: () => void
   ) {}
 }
@@ -74,24 +74,23 @@ export class AppEventProxy {
     eventCreator: EventCreator<T, (props: P) => P & TypedAppEvent<T>>,
     callback: (
       e: ReturnType<EventCreator<T, (props: P) => P & TypedAppEvent<T>>>
-    ) => void
+    ) => Promise<any>
   ) {
     const listener: EventListener = new EventListener(
       e => {
         if (e.type === eventCreator.type) {
-          callback(e as any);
-        }
+          return callback(e as any);
+        } else return Promise.resolve();
       },
       () => this.detachListener(listener)
     );
     return this.attachListener(listener);
   }
 
-  dispatch(event: AppEvent) {
-    for (const listener of this.listeners) {
-      listener.fn(event);
-    }
-    return event;
+  dispatch(event: AppEvent): Promise<any[]> {
+    return Promise.all(this.listeners.map(l => l.fn(event))).then(results =>
+      results.filter(result => !!result)
+    );
   }
 
   attachListener(listener: EventListener) {

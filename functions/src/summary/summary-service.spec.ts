@@ -1,6 +1,6 @@
 import { SummaryService } from './summary-service';
 import { InMemoryDocumentService } from '../testing/in-memory-document-service';
-import { AppEventProxy } from '../event';
+import { AppEventProxy } from '../event-proxy';
 import { createMonthUpdateEvent } from '../months/month-events';
 
 describe('Summary', () => {
@@ -9,7 +9,7 @@ describe('Summary', () => {
     const proxy = new AppEventProxy();
     const s = new SummaryService(ds);
     s.observe(proxy);
-    proxy.dispatch(
+    await proxy.dispatch(
       createMonthUpdateEvent({
         user: 'max',
         before: { uid: '2019-10', categories: [], days: [] },
@@ -31,7 +31,6 @@ describe('Summary', () => {
         }
       })
     );
-    await wait();
     expect(ds.getState()).toEqual({
       userData: {
         max: {
@@ -40,7 +39,7 @@ describe('Summary', () => {
         }
       }
     });
-    proxy.dispatch(
+    await proxy.dispatch(
       createMonthUpdateEvent({
         user: 'max',
         before: { uid: '2019-10', categories: [], days: [] },
@@ -62,7 +61,6 @@ describe('Summary', () => {
         }
       })
     );
-    await wait();
     expect(ds.getState()).toEqual({
       userData: {
         max: {
@@ -76,7 +74,3 @@ describe('Summary', () => {
     });
   });
 });
-
-function wait(t: number = 0) {
-  return new Promise(resolve => setTimeout(() => resolve(), t));
-}

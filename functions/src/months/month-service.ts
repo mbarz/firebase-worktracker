@@ -1,4 +1,4 @@
-import { AppEventProxy } from '../event';
+import { AppEventProxy } from '../event-proxy';
 import * as dayEvents from '../days/day-events';
 import { Day, Month, Item, CategoryTrackingSummary } from '../model';
 import { DocumentService } from '../documents';

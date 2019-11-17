@@ -1,6 +1,6 @@
 import { MonthService } from './month-service';
 import { InMemoryDocumentService } from '../testing/in-memory-document-service';
-import { AppEventProxy } from '../event';
+import { AppEventProxy } from '../event-proxy';
 import { createDayUpdateEvent } from '../days/day-events';
 import { Month, Day } from '../model';
 
@@ -29,14 +29,13 @@ describe('MonthService', () => {
       target: { minutes: 300 },
       uid: '2019-10-09'
     };
-    proxy.dispatch(
+    await proxy.dispatch(
       createDayUpdateEvent({
         user: 'max',
         before,
         after: after
       })
     );
-    await wait();
     const state = ds.getState();
     expect(state['userData/max/months']).toBeTruthy();
     expect(state['userData/max/months']['2019-10']).toBeTruthy();
@@ -111,22 +110,22 @@ describe('MonthService', () => {
       target: { minutes: 300 },
       uid: '2019-10-09'
     };
-    proxy.dispatch(
+    await proxy.dispatch(
       createDayUpdateEvent({
         user: 'max',
         before,
         after: day1
       })
     );
-    await wait();
-    proxy.dispatch(
+
+    await proxy.dispatch(
       createDayUpdateEvent({
         user: 'max',
         before: day1,
         after: day2
       })
     );
-    await wait();
+
     const state = ds.getState();
     expect(state['userData/max/months']).toBeTruthy();
     expect(state['userData/max/months']['2019-10']).toBeTruthy();
@@ -154,7 +153,3 @@ describe('MonthService', () => {
     ]);
   });
 });
-
-function wait(t: number = 0) {
-  return new Promise(resolve => setTimeout(() => resolve(), t));
-}

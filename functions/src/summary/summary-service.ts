@@ -1,5 +1,5 @@
 import { DocumentService } from '../documents';
-import { AppEventProxy } from '../event';
+import { AppEventProxy } from '../event-proxy';
 import * as monthEvents from '../months/month-events';
 import { Month, Summary, MonthTrackingSummary } from '../model';
 
@@ -9,7 +9,7 @@ export class SummaryService {
     eventProxy.on(
       monthEvents.createMonthUpdateEvent,
       ({ user, before, after }) => {
-        this.updateSummaryWithChangedMonth(user, { after, before });
+        return this.updateSummaryWithChangedMonth(user, { after, before });
       }
     );
   }

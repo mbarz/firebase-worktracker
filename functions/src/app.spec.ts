@@ -1,5 +1,5 @@
 import { DayService } from './days/day-service';
-import { AppEventProxy } from './event';
+import { AppEventProxy } from './event-proxy';
 import * as events from './items/item-events';
 import { InMemoryDocumentService } from './testing/in-memory-document-service';
 
@@ -22,13 +22,13 @@ describe('App', () => {
       start: '10:00',
       end: '12:00'
     };
-    proxy.dispatch(
+    await proxy.dispatch(
       events.createItemCreationEvent({
         user: 'max',
         item: item
       })
     );
-    await wait();
+
     expect(documentService.getState()).toEqual({
       'userData/max/days': {
         '2019-10-10': {
@@ -40,7 +40,7 @@ describe('App', () => {
     });
   });
   it('should update day, when item is updated', async () => {
-    documentService.setState({
+    const stateBefore = {
       'userData/max/days': {
         '2019-10-10': {
           uid: '2019-10-10',
@@ -57,31 +57,31 @@ describe('App', () => {
           target: { minutes: 420 }
         }
       }
-    });
-    const item = {
-      uid: '123',
-      title: 'item a',
-      category: 'foo',
-      date: '2019-10-10',
-      start: '10:00',
-      end: '13:00'
     };
-    proxy.dispatch(
-      events.createItemUpdateEvent({
-        user: 'max',
-        item: item
-      })
-    );
-    await wait();
-    expect(documentService.getState()).toEqual({
+    const event = events.createItemUpdateEvent({
+      user: 'max',
+      item: {
+        uid: '123',
+        title: 'item a',
+        category: 'foo',
+        date: '2019-10-10',
+        start: '10:00',
+        end: '13:00'
+      }
+    });
+    const expectedState = {
       'userData/max/days': {
         '2019-10-10': {
           uid: '2019-10-10',
-          items: [item],
+          items: [event.item],
           target: { minutes: 420 }
         }
       }
-    });
+    };
+
+    documentService.setState(stateBefore);
+    await proxy.dispatch(event);
+    expect(documentService.getState()).toEqual(expectedState);
   });
 
   it('should remove item from day, when item is deleted', async () => {
@@ -118,11 +118,8 @@ describe('App', () => {
     };
 
     documentService.setState(originalState);
-    proxy.dispatch(event);
-    await wait();
+    await proxy.dispatch(event);
+
     expect(documentService.getState()).toEqual(expectedResultState);
   });
 });
-function wait(t: number = 0) {
-  return new Promise(resolve => setTimeout(() => resolve(), t));
-}

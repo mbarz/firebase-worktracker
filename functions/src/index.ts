@@ -2,7 +2,7 @@ import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import * as dayEvents from './days/day-events';
 import { DayService } from './days/day-service';
-import { AppEventProxy } from './event';
+import { AppEventProxy } from './event-proxy';
 import { FirestoreDocumentService } from './firestore';
 import * as itemEvents from './items/item-events';
 import { Day, Item, Month } from './model';

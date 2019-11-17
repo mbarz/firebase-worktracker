@@ -1,4 +1,4 @@
-import { createEventFactory, props } from '../event';
+import { createEventFactory, props } from '../event-proxy';
 import { Item } from '../model';
 
 export const createItemCreationEvent = createEventFactory(

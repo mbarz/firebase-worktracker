@@ -1,6 +1,6 @@
 import { DocumentService } from '../documents';
 import { Day, Item } from '../model';
-import { AppEventProxy } from '../event';
+import { AppEventProxy } from '../event-proxy';
 import * as itemEvents from '../items/item-events';
 
 export class DayService {
