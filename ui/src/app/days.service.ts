@@ -1,38 +1,37 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of, throwError, EMPTY } from 'rxjs';
 import { map, switchMap, take } from 'rxjs/operators';
 import { Item, ItemDTO } from './item';
 
 export type DayDTO = {
-  day: string;
-  user: string;
+  uid: string;
   items: ItemDTO[];
+  target: { minutes: number };
 };
 
 export class Day {
-  target = {
-    milliseconds: 7 * 60 * 60 * 1000
+  target: {
+    minutes: number;
   };
-  day: string;
-  user: string;
+  uid: string;
   items: Item[];
   constructor(data: DayDTO) {
-    this.day = data.day;
-    this.user = data.user;
+    this.uid = data.uid;
     this.items = data.items.map(item => new Item(item));
+    this.target = data.target;
   }
 
   get duration() {
-    const milliseconds = this.items
-      .map(i => i.duration.milliseconds)
+    const minutes = this.items
+      .map(i => i.duration.minutes)
       .reduce((a, b) => a + b, 0);
-    return { milliseconds };
+    return { minutes };
   }
 
   get percentage() {
-    return (this.duration.milliseconds / this.target.milliseconds) * 100;
+    return (this.duration.minutes / this.target.minutes) * 100;
   }
 }
 
@@ -72,10 +71,41 @@ export class DaysService {
       .pipe(
         map(snap => {
           const data = snap.payload.exists ? snap.payload.data() : undefined;
-          return data || { day: date, user: user.uid, items: [] };
+          return data || { uid: date, items: [], target: { minutes: 420 } };
         }),
         map(data => new Day(data))
       );
+  }
+
+  adjustDayTarget({
+    date,
+    target
+  }: {
+    date: string;
+    target: { minutes: number };
+  }) {
+    return this.auth.user.pipe(
+      take(1),
+      switchMap(user =>
+        user
+          ? this.adjustDayTargetForUser({ user: user.uid, date, target })
+          : EMPTY
+      )
+    );
+  }
+
+  private adjustDayTargetForUser({
+    user,
+    date,
+    target
+  }: {
+    user: string;
+    date: string;
+    target: { minutes: number };
+  }) {
+    return this.collection(user)
+      .doc<DayDTO>(date)
+      .update({ target });
   }
 
   private collection(user: string) {

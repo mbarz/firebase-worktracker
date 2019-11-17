@@ -23,6 +23,7 @@ export class Item {
   }
   get duration() {
     const milliseconds = this.end.getTime() - this.start.getTime();
-    return { milliseconds };
+    const minutes = Math.floor(milliseconds / (1000 * 60));
+    return { milliseconds, minutes };
   }
 }

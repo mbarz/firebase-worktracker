@@ -1,0 +1,45 @@
+<h2 mat-dialog-title>Create Activity</h2>
+<mat-dialog-content>
+  <form [formGroup]="form.group" (submit)="submit()">
+    <div class="input-container">
+      <mat-form-field>
+        <input matInput placeholder="title" formControlName="title" />
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="category" formControlName="category" />
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          placeholder="Choose a date"
+          formControlName="date"
+        />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="start"
+          formControlName="start"
+          type="time"
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="end" formControlName="end" type="time" />
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button
+    mat-button
+    (click)="submit()"
+    color="primary"
+    [disabled]="!this.form.valid"
+  >
+    Save
+  </button>
+  <button mat-button mat-dialog-close>Cancel</button>
+</mat-dialog-actions>

@@ -2,65 +2,6 @@
   <h1>Items</h1>
 </div>
 
-<div class="content-area">
-  <form [formGroup]="formGroup" (submit)="onSubmit()">
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Create a new Item</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="input-container">
-          <mat-form-field>
-            <input matInput placeholder="title" formControlName="title" />
-          </mat-form-field>
-          <mat-form-field>
-            <input matInput placeholder="category" formControlName="category" />
-          </mat-form-field>
-          <mat-form-field>
-            <input
-              matInput
-              [matDatepicker]="picker"
-              placeholder="Choose a date"
-              formControlName="date"
-            />
-            <mat-datepicker-toggle
-              matSuffix
-              [for]="picker"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
-          <mat-form-field>
-            <input
-              matInput
-              placeholder="start"
-              formControlName="start"
-              type="time"
-            />
-          </mat-form-field>
-          <mat-form-field>
-            <input
-              matInput
-              placeholder="end"
-              formControlName="end"
-              type="time"
-            />
-          </mat-form-field>
-        </div>
-      </mat-card-content>
-      <mat-card-actions>
-        <button
-          mat-flat-button
-          color="primary"
-          type="submit"
-          [disabled]="!formGroup.valid"
-        >
-          save
-        </button>
-      </mat-card-actions>
-    </mat-card>
-  </form>
-</div>
-
 <div *ngIf="false">
   <h2>Items from Firestore</h2>
   <div *ngFor="let item of items$ | async">

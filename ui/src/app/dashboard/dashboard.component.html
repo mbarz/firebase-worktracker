@@ -2,6 +2,17 @@
   <h1>
     Dashboard
   </h1>
+  <div class="spacer"></div>
+  <div class="actions">
+    <button
+      type="button"
+      mat-raised-button
+      color="accent"
+      (click)="openAddActivityDialog()"
+    >
+      Add Activity
+    </button>
+  </div>
 </div>
 
 <div class="content-area" *ngIf="summary$ | async as summary">
@@ -10,38 +21,86 @@
 
 <div class="content-area" *ngIf="currentDay$ | async as day">
   <mat-card>
-    <div>
-      {{ day.duration.milliseconds | duration }} of
-      {{ day.target.milliseconds | duration }}
-    </div>
-    <mat-progress-bar
-      mode="determinate"
-      [value]="day.percentage"
-    ></mat-progress-bar>
-    <table>
-      <caption></caption>
-      <thead>
-        <tr>
-          <th id="category">category</th>
-          <th id="title">title</th>
-          <th id="start">start</th>
-          <th id="end">end</th>
-          <th scope="actions"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of day.items">
-          <td>{{ item.title }}</td>
-          <td>{{ item.category }}</td>
-          <td>{{ item.start | date: 'HH:mm' }}</td>
-          <td>{{ item.end | date: 'HH:mm' }}</td>
-          <td>
-            <button mat-stroked-button type="button" (click)="deleteItem(item)">
-              Delete
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <mat-card-header>
+      <mat-card-title>{{ day.uid }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div>
+        {{ day.duration.minutes | duration }} of
+        {{ day.target.minutes | duration }}
+      </div>
+      <mat-progress-bar
+        mode="determinate"
+        [value]="day.percentage"
+      ></mat-progress-bar>
+      <table>
+        <caption></caption>
+        <thead>
+          <tr>
+            <th id="category">category</th>
+            <th id="title">title</th>
+            <th id="start">start</th>
+            <th id="end">end</th>
+            <th scope="actions"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of day.items">
+            <td>{{ item.title }}</td>
+            <td>{{ item.category }}</td>
+            <td>{{ item.start | date: 'HH:mm' }}</td>
+            <td>{{ item.end | date: 'HH:mm' }}</td>
+            <td>
+              <button
+                mat-stroked-button
+                type="button"
+                (click)="deleteItem(item)"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="content-area" *ngIf="currentMonth$ | async as month">
+    <mat-card-header>
+      <mat-card-title>{{ month.uid }}</mat-card-title>
+      <mat-card-subtitle
+        >current month reached {{ month.reached.minutes | duration }} of
+        {{ month.target.minutes | duration }}</mat-card-subtitle
+      >
+    </mat-card-header>
+    <mat-card-content>
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Day</th>
+            <th>Target</th>
+            <th>Reached</th>
+            <th>Diff</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let day of month.pastDays">
+            <td>
+              <button mat-button (click)="openAddActivityDialogForDay(day.uid)">
+                Add Activity
+              </button>
+              <button mat-button (click)="openDayTargetAdjustmentDialog(day)">
+                Edit
+              </button>
+            </td>
+            <td>{{ day.uid }}</td>
+            <td>{{ day.target.minutes | duration }}</td>
+            <td>{{ day.reached.minutes | duration }}</td>
+            <td>{{ day.reached.minutes - day.target.minutes | duration }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </mat-card-content>
   </mat-card>
 </div>
