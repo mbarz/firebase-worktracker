@@ -1,34 +1,75 @@
 import { AppEventProxy } from '../event';
 import * as dayEvents from '../days/day-events';
-import { Day, Month, Item } from '../model';
+import { Day, Month, Item, CategoryTrackingSummary } from '../model';
 import { DocumentService } from '../documents';
 
 export class MonthService {
   constructor(private readonly documentService: DocumentService) {}
 
   observe(eventProxy: AppEventProxy) {
-    eventProxy.on(dayEvents.createDayUpdateEvent, ({ user, day }) =>
-      this.updateMonthWithDay(user, day)
+    eventProxy.on(dayEvents.createDayUpdateEvent, ({ user, before, after }) =>
+      this.updateMonthWithChangedDay(user, { after, before })
     );
   }
 
-  async updateMonthWithDay(user: string, day: Day) {
-    const month = day.uid.substring(0, 7);
+  async updateMonthWithChangedDay(
+    user: string,
+    change: { before: Day; after: Day }
+  ) {
+    const month = change.after.uid.substring(0, 7);
     const doc = await this.getMonthDocumentForDay(user, month);
     const data = await doc.getData();
-    const dayData = data.days.find(d => d.uid === day.uid);
+    this.updateCategories(data, change);
+    this.updateDaySummary(data, change.after);
+    return doc.setData(data);
+  }
 
+  private updateDaySummary(data: Month, after: Day) {
+    const dayData = data.days.find(d => d.uid === after.uid);
     if (dayData) {
-      dayData.target = day.target;
+      dayData.target = after.target;
       const reached = { minutes: 0 };
-      const items = day.items.map(item => ({
+      const items = after.items.map(item => ({
         ...item,
         minutes: this.getMinutesFromItem(item)
       }));
       items.forEach(item => (reached.minutes += item.minutes));
       dayData.reached = reached;
     }
-    return doc.setData(data);
+  }
+
+  private updateCategories(
+    data: Month,
+    { before, after }: { before: Day; after: Day }
+  ) {
+    const categories = data.categories;
+    before.items.forEach(item => {
+      const category = this.getOrCreateTrackedCategory(
+        categories,
+        item.category
+      );
+      category.tracked.minutes -= this.getMinutesFromItem(item);
+    });
+    after.items.forEach(item => {
+      const category = this.getOrCreateTrackedCategory(
+        categories,
+        item.category
+      );
+      category.tracked.minutes += this.getMinutesFromItem(item);
+    });
+    data.categories = categories.filter(c => c.tracked.minutes !== 0);
+  }
+
+  private getOrCreateTrackedCategory(
+    categories: CategoryTrackingSummary[],
+    uid: string
+  ): CategoryTrackingSummary {
+    let cat = categories.find(c => c.uid === uid);
+    if (!cat) {
+      cat = { uid, tracked: { minutes: 0 } };
+      categories.push(cat);
+    }
+    return cat;
   }
 
   private getMinutesFromItem(item: Item) {

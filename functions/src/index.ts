@@ -1,10 +1,12 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
+import * as dayEvents from './days/day-events';
 import { DayService } from './days/day-service';
 import { AppEventProxy } from './event';
-import * as events from './items/item-events';
 import { FirestoreDocumentService } from './firestore';
-import { Item } from './model';
+import * as itemEvents from './items/item-events';
+import { Day, Item, Month } from './model';
+import * as monthEvents from './months/month-events';
 
 admin.initializeApp();
 const firestore = admin.firestore();
@@ -20,7 +22,7 @@ export const onItemCreation = functions.firestore
   .document('userData/{user}/items/{documentId}')
   .onCreate((event, context) =>
     proxy.dispatch(
-      events.createItemCreationEvent({
+      itemEvents.createItemCreationEvent({
         item: event.data() as Item,
         user: context.params['user']
       })
@@ -31,7 +33,7 @@ export const onItemUpdate = functions.firestore
   .document('userData/{user}/items/{documentId}')
   .onUpdate((event, context) =>
     proxy.dispatch(
-      events.createItemUpdateEvent({
+      itemEvents.createItemUpdateEvent({
         item: event.after.data() as Item,
         user: context.params['user']
       })
@@ -42,21 +44,33 @@ export const onItemDeletion = functions.firestore
   .document('userData/{user}/items/{documentId}')
   .onDelete((event, context) =>
     proxy.dispatch(
-      events.createItemDeletionEvent({
+      itemEvents.createItemDeletionEvent({
         item: event.data() as Item,
         user: context.params['user']
       })
     )
   );
 
-export const onDayCreation = functions.firestore
-  .document('userData/{user}/days/{day}')
-  .onCreate((event, context) => {
-    console.log(context.resource.name, 'created');
-  });
-
 export const onDayUpdate = functions.firestore
   .document('userData/{user}/days/{day}')
-  .onUpdate((event, context) => {
-    console.log(context.resource.name, 'updated');
-  });
+  .onUpdate((event, context) =>
+    proxy.dispatch(
+      dayEvents.createDayUpdateEvent({
+        user: context.params['user'],
+        before: event.before.data() as Day,
+        after: event.after.data() as Day
+      })
+    )
+  );
+
+export const onMonthUpdate = functions.firestore
+  .document('userData/{user}/months/{month}')
+  .onUpdate((event, context) =>
+    proxy.dispatch(
+      monthEvents.createMonthUpdateEvent({
+        user: context.params['user'],
+        before: event.before.data() as Month,
+        after: event.after.data() as Month
+      })
+    )
+  );

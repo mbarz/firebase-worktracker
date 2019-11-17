@@ -1,3 +1,10 @@
+export type CategoryTrackingSummary = {
+  uid: string;
+  tracked: {
+    minutes: number;
+  };
+};
+
 export type Month = {
   uid: string;
   days: {
@@ -5,5 +12,5 @@ export type Month = {
     target: { minutes: number };
     reached: { minutes: number };
   }[];
-  categories: { uid: string; tracked: { minutes: number } }[];
+  categories: CategoryTrackingSummary[];
 };
