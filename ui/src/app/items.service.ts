@@ -34,11 +34,11 @@ export class ItemsService {
       throw new Error('Must be logged in to create item');
     }
     const doc = this.collection(user.uid).doc(item.uid);
-    return doc.set(item, { merge: false });
+    return from(doc.set(item, { merge: false }));
   }
 
   updateItem(item: ItemDTO) {
-    return this.auth.user.pipe(map(user => this.setItem(user, item)));
+    return this.auth.user.pipe(switchMap(user => this.setItem(user, item)));
   }
 
   private collection(user: string) {

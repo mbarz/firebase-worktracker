@@ -17,10 +17,10 @@ export class Day {
   };
   uid: string;
   items: Item[];
-  constructor(data: DayDTO) {
-    this.uid = data.uid;
-    this.items = data.items.map(item => new Item(item));
-    this.target = data.target;
+  constructor(public dto: DayDTO) {
+    this.uid = dto.uid;
+    this.items = dto.items.map(item => new Item(item));
+    this.target = dto.target;
   }
 
   get duration() {
@@ -54,26 +54,12 @@ export class DaysService {
     return this.collection(user.uid).valueChanges();
   }
 
-  getDay(date: string): Observable<Day> {
-    return this.auth.user.pipe(
-      take(1),
-      switchMap(user =>
-        user
-          ? this.getDayForUser(user, date)
-          : throwError(new Error('User needs to be logged in to receive data'))
-      )
-    );
-  }
-  getDayForUser(user: firebase.User, date: string): Observable<Day> {
-    return this.collection(user.uid)
+  getDayForUser(userId: string, date: string): Observable<DayDTO | undefined> {
+    return this.collection(userId)
       .doc<DayDTO>(date)
       .snapshotChanges()
       .pipe(
-        map(snap => {
-          const data = snap.payload.exists ? snap.payload.data() : undefined;
-          return data || { uid: date, items: [], target: { minutes: 420 } };
-        }),
-        map(data => new Day(data))
+        map(snap => (snap.payload.exists ? snap.payload.data() : undefined))
       );
   }
 

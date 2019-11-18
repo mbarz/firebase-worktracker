@@ -10,6 +10,9 @@ import { MonthDTO, MonthsService } from '../months.service';
 import { SummaryService } from '../summary.service';
 import { DataSource } from '@angular/cdk/table';
 import { EditActivityDialogComponent } from '../edit-activity-dialog/edit-activity-dialog.component';
+import { State } from '../reducers';
+import { Store } from '@ngrx/store';
+import { getCurrentDay } from '../selectors';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,7 +20,7 @@ import { EditActivityDialogComponent } from '../edit-activity-dialog/edit-activi
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  currentDay$: Observable<Day> = NEVER;
+  currentDay$: Observable<Day> = this.store.select(getCurrentDay);
   currentMonth$: Observable<MonthDTO> = NEVER;
   summary$: Observable<any> = NEVER;
 
@@ -29,13 +32,11 @@ export class DashboardComponent implements OnInit {
     private readonly monthsService: MonthsService,
     private readonly itemsService: ItemsService,
     private readonly summaryService: SummaryService,
-    private readonly dialogService: MatDialog
+    private readonly dialogService: MatDialog,
+    private readonly store: Store<State>
   ) {}
 
   ngOnInit() {
-    const date = new Date();
-    const iso = date.toISOString().substring(0, 10);
-    this.currentDay$ = this.daysService.getDay(iso);
     this.currentMonth$ = this.monthsService.getCurrentMonth();
     this.summary$ = this.summaryService.getSummary();
   }
@@ -57,7 +58,10 @@ export class DashboardComponent implements OnInit {
     });
     dlg.beforeClosed().subscribe(dto => {
       if (dto) {
-        this.itemsService.updateItem(dto).subscribe();
+        console.log('writing data');
+        this.itemsService.updateItem(dto).subscribe(result => {
+          console.log('data written');
+        });
       }
     });
   }

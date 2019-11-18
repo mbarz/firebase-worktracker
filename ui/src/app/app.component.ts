@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { State } from './reducers';
+import * as fromApp from './selectors';
 
 @Component({
   selector: 'app-root',
@@ -9,9 +12,13 @@ import { Router } from '@angular/router';
 })
 export class AppComponent {
   title = 'firebase-worktracker-ui';
+
+  user$ = this.store.select(fromApp.getUser);
+
   constructor(
     public afAuth: AngularFireAuth,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly store: Store<State>
   ) {}
 
   logout() {
