@@ -10,11 +10,14 @@ export class MonthService {
     eventProxy.on(dayEvents.createDayUpdateEvent, ({ user, before, after }) =>
       this.updateMonthWithChangedDay(user, { after, before })
     );
+    eventProxy.on(dayEvents.createDayCreateEvent, ({ user, day }) =>
+      this.updateMonthWithChangedDay(user, { after: day })
+    );
   }
 
   async updateMonthWithChangedDay(
     user: string,
-    change: { before: Day; after: Day }
+    change: { before?: Day; after: Day }
   ) {
     const month = change.after.uid.substring(0, 7);
     const doc = await this.getMonthDocumentForDay(user, month);
@@ -40,10 +43,10 @@ export class MonthService {
 
   private updateCategories(
     data: Month,
-    { before, after }: { before: Day; after: Day }
+    { before, after }: { before?: Day; after: Day }
   ) {
     const categories = data.categories;
-    before.items.forEach(item => {
+    (before ? before.items : []).forEach(item => {
       const category = this.getOrCreateTrackedCategory(
         categories,
         item.category

@@ -55,6 +55,17 @@ export const onItemDeletion = functions.firestore
     )
   );
 
+export const onDayCreation = functions.firestore
+  .document('userData/{user}/days/{day}')
+  .onCreate((event, context) => {
+    return proxy.dispatch(
+      dayEvents.createDayCreateEvent({
+        user: context.params['user'],
+        day: event.data() as Day
+      })
+    );
+  });
+
 export const onDayUpdate = functions.firestore
   .document('userData/{user}/days/{day}')
   .onUpdate((event, context) =>
