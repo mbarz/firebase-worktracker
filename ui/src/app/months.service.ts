@@ -30,6 +30,7 @@ export type MonthDTO = {
 export class Month {
   target: { minutes: number };
   reached: { minutes: number };
+  totalTarget: { minutes: number };
   pastDays: {
     uid: string;
     weekDay: string;
@@ -54,6 +55,9 @@ export class Month {
       minutes: this.pastDays
         .map(d => d.target.minutes)
         .reduce((a, b) => a + b, 0)
+    };
+    this.totalTarget = {
+      minutes: this.days.map(d => d.target.minutes).reduce((a, b) => a + b, 0)
     };
     this.reached = {
       minutes: this.pastDays

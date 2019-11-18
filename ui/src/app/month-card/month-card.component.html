@@ -15,6 +15,19 @@
     >
   </mat-card-header>
   <mat-card-content>
+    <mat-progress-bar
+      mode="determinate"
+      [value]="(month.target.minutes / month.totalTarget.minutes) * 100"
+      color="primary"
+    ></mat-progress-bar>
+    <mat-progress-bar
+      mode="determinate"
+      [value]="(month.reached.minutes / month.totalTarget.minutes) * 100"
+      [color]="
+        month.reached.minutes < month.target.minutes ? 'warn' : 'primary'
+      "
+    ></mat-progress-bar>
+
     <table mat-table [dataSource]="month.pastDays">
       <caption></caption>
 
