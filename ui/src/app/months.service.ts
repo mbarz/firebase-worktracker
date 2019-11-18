@@ -31,15 +31,21 @@ export class Month {
   reached: { minutes: number };
   pastDays: {
     uid: string;
+    weekDay: string;
     target: { minutes: number };
     reached: { minutes: number };
   }[];
 
-  constructor(private data: MonthDTO) {
-    this.pastDays = data.days.filter(day => {
-      const d = new Date(day.uid);
-      return d.getTime() < Date.now();
-    });
+  constructor(private readonly data: MonthDTO) {
+    const weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+    this.pastDays = data.days
+      .filter(day => {
+        const d = new Date(day.uid);
+        return d.getTime() < Date.now();
+      })
+      .map(d => {
+        return { ...d, weekDay: weekdays[new Date(d.uid).getDay()] };
+      });
     this.pastDays.sort((a, b) => b.uid.localeCompare(a.uid));
     this.target = {
       minutes: this.pastDays

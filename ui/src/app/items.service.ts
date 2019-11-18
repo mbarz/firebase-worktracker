@@ -26,16 +26,19 @@ export class ItemsService {
   }
 
   createItem(item: ItemDTO) {
-    return this.auth.user.pipe(
-      map(user => {
-        if (!user) {
-          throw new Error('Must be logged in to create item');
-        }
-        console.log(`creating item as ${user.uid}`);
-        const doc = this.collection(user.uid).doc(item.uid);
-        return doc.set(item, { merge: false });
-      })
-    );
+    return this.auth.user.pipe(map(user => this.setItem(user, item)));
+  }
+
+  private setItem(user: firebase.User | null, item: ItemDTO) {
+    if (!user) {
+      throw new Error('Must be logged in to create item');
+    }
+    const doc = this.collection(user.uid).doc(item.uid);
+    return from(doc.set(item, { merge: false }));
+  }
+
+  updateItem(item: ItemDTO) {
+    return this.auth.user.pipe(switchMap(user => this.setItem(user, item)));
   }
 
   private collection(user: string) {

@@ -3,70 +3,78 @@
     Dashboard
   </h1>
   <div class="spacer"></div>
-  <div class="actions">
-    <button
-      type="button"
-      mat-raised-button
-      color="accent"
-      (click)="openAddActivityDialog()"
-    >
-      Add Activity
-    </button>
-  </div>
+  <div class="actions"></div>
 </div>
 
-<div class="content-area" *ngIf="summary$ | async as summary">
+<!-- <div class="content-area" *ngIf="summary$ | async as summary">
   <pre>{{ summary | json }}</pre>
-</div>
+</div> -->
 
 <div class="content-area" *ngIf="currentDay$ | async as day">
   <mat-card>
     <mat-card-header>
+      <div mat-card-avatar class="month-card-avatar">
+        <mat-icon fontSet="fa" fontIcon="fa-calendar" inline></mat-icon>
+      </div>
       <mat-card-title>{{ day.uid }}</mat-card-title>
+      <mat-card-subtitle>current day</mat-card-subtitle>
+      <div class="spacer"></div>
+      <div>
+        <button
+          class="create-item-for-day-button"
+          type="button"
+          mat-mini-fab
+          (click)="openAddActivityDialog()"
+        >
+          <mat-icon fontSet="fa" fontIcon="fa-calendar-plus" inline></mat-icon>
+        </button>
+      </div>
     </mat-card-header>
     <mat-card-content>
-      <div>
-        {{ day.duration.minutes | duration }} of
-        {{ day.target.minutes | duration }}
-      </div>
       <mat-progress-bar
         mode="determinate"
         [value]="day.percentage"
       ></mat-progress-bar>
-      <table>
+      <table mat-table [dataSource]="day.items">
         <caption></caption>
-        <thead>
-          <tr>
-            <th id="category">category</th>
-            <th id="title">title</th>
-            <th id="start">start</th>
-            <th id="end">end</th>
-            <th scope="actions"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of day.items">
-            <td>{{ item.title }}</td>
-            <td>{{ item.category }}</td>
-            <td>{{ item.start | date: 'HH:mm' }}</td>
-            <td>{{ item.end | date: 'HH:mm' }}</td>
-            <td>
-              <button
-                mat-stroked-button
-                type="button"
-                (click)="deleteItem(item)"
-              >
-                Delete
-              </button>
-            </td>
-          </tr>
-        </tbody>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef scope="col"></th>
+          <td mat-cell *matCellDef="let item" class="actions-cell">
+            <button mat-icon-button color="accent" (click)="editItem(item)">
+              <mat-icon fontSet="fa" fontIcon="fa-pen"></mat-icon>
+            </button>
+            <button mat-icon-button color="accent" (click)="deleteItem(item)">
+              <mat-icon fontSet="fa" fontIcon="fa-trash"></mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="category">
+          <th mat-header-cell *matHeaderCellDef scope="col">Category</th>
+          <td mat-cell *matCellDef="let item">
+            {{ item.category }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef scope="col">Title</th>
+          <td mat-cell *matCellDef="let item">{{ item.title }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="time">
+          <th mat-header-cell *matHeaderCellDef scope="col">Time</th>
+          <td mat-cell *matCellDef="let item" class="time-cell">
+            {{ item.start | date: 'HH:mm' }}-{{ item.end | date: 'HH:mm' }}
+          </td>
+        </ng-container>
+        <tr mat-row *matRowDef="let row; columns: displayedItemColumns"></tr>
       </table>
     </mat-card-content>
   </mat-card>
 
   <mat-card class="content-area" *ngIf="currentMonth$ | async as month">
     <mat-card-header>
+      <div mat-card-avatar class="month-card-avatar">
+        <mat-icon fontSet="fa" fontIcon="fa-calendar" inline></mat-icon>
+      </div>
       <mat-card-title>{{ month.uid }}</mat-card-title>
       <mat-card-subtitle
         >current month reached {{ month.reached.minutes | duration }} of
@@ -74,32 +82,55 @@
       >
     </mat-card-header>
     <mat-card-content>
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>Day</th>
-            <th>Target</th>
-            <th>Reached</th>
-            <th>Diff</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let day of month.pastDays">
-            <td>
-              <button mat-button (click)="openAddActivityDialogForDay(day.uid)">
-                Add Activity
-              </button>
-              <button mat-button (click)="openDayTargetAdjustmentDialog(day)">
-                Edit
-              </button>
-            </td>
-            <td>{{ day.uid }}</td>
-            <td>{{ day.target.minutes | duration }}</td>
-            <td>{{ day.reached.minutes | duration }}</td>
-            <td>{{ day.reached.minutes - day.target.minutes | duration }}</td>
-          </tr>
-        </tbody>
+      <table mat-table [dataSource]="month.pastDays">
+        <caption></caption>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef scope="col"></th>
+          <td mat-cell *matCellDef="let day" class="actions-cell">
+            <button
+              mat-icon-button
+              color="accent"
+              (click)="openAddActivityDialogForDay(day.uid)"
+            >
+              <mat-icon fontSet="fa" fontIcon="fa-calendar-plus"></mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="accent"
+              (click)="openDayTargetAdjustmentDialog(day)"
+            >
+              <mat-icon fontSet="fa" fontIcon="fa-cog"></mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="day">
+          <th mat-header-cell *matHeaderCellDef scope="col">Day</th>
+          <td mat-cell *matCellDef="let day">
+            {{ day.weekDay }}, {{ day.uid }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="tracked">
+          <th mat-header-cell *matHeaderCellDef scope="col"></th>
+          <td mat-cell *matCellDef="let day">
+            {{ day.reached.minutes | duration }} of
+            {{ day.target.minutes | duration }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="diff">
+          <th mat-header-cell *matHeaderCellDef scope="col"></th>
+          <td
+            mat-cell
+            *matCellDef="let day"
+            class="diff-cell"
+            [class.bad]="day.reached.minutes - day.target.minutes < 0"
+            [class.good]="day.reached.minutes - day.target.minutes > 0"
+          >
+            {{ day.reached.minutes - day.target.minutes | duration }}
+          </td>
+        </ng-container>
+
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
     </mat-card-content>
   </mat-card>

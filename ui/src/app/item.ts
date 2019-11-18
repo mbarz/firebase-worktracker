@@ -13,13 +13,13 @@ export class Item {
   category: string;
   start: Date;
   end: Date;
-  constructor(data: ItemDTO) {
-    this.uid = data.uid;
-    this.title = data.title;
-    this.category = data.category;
+  constructor(public readonly dto: ItemDTO) {
+    this.uid = dto.uid;
+    this.title = dto.title;
+    this.category = dto.category;
 
-    this.start = new Date(`${data.date} ${data.start}`);
-    this.end = new Date(`${data.date} ${data.end}`);
+    this.start = new Date(`${dto.date} ${dto.start}`);
+    this.end = new Date(`${dto.date} ${dto.end}`);
   }
   get duration() {
     const milliseconds = this.end.getTime() - this.start.getTime();

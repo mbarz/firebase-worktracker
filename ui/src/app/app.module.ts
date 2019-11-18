@@ -6,7 +6,6 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -17,6 +16,13 @@ import { DurationPipe } from './duration.pipe';
 import { FirestoreSettingsToken } from '@angular/fire/firestore';
 import { AddActivityDialogComponent } from './add-activity-dialog/add-activity-dialog.component';
 import { AdjustDayTargetDialogComponent } from './adjust-day-target-dialog/adjust-day-target-dialog.component';
+import { EditActivityDialogComponent } from './edit-activity-dialog/edit-activity-dialog.component';
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from './reducers';
+import { EffectsModule } from '@ngrx/effects';
+import { AppEffects } from './app.effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -26,9 +32,14 @@ import { AdjustDayTargetDialogComponent } from './adjust-day-target-dialog/adjus
     DashboardComponent,
     DurationPipe,
     AddActivityDialogComponent,
+    AdjustDayTargetDialogComponent,
+    EditActivityDialogComponent
+  ],
+  entryComponents: [
+    AddActivityDialogComponent,
+    EditActivityDialogComponent,
     AdjustDayTargetDialogComponent
   ],
-  entryComponents: [AddActivityDialogComponent, AdjustDayTargetDialogComponent],
   imports: [
     BrowserModule,
     FormsModule,
@@ -39,7 +50,19 @@ import { AdjustDayTargetDialogComponent } from './adjust-day-target-dialog/adjus
     AngularFireAuthGuardModule,
     AngularFirestoreModule,
     MaterialModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    StoreModule.forRoot(reducers, {
+      metaReducers,
+      runtimeChecks: {
+        strictStateImmutability: true,
+        strictActionImmutability: true
+      }
+    }),
+    EffectsModule.forRoot([AppEffects]),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+      logOnly: environment.production
+    })
   ],
   providers: [
     {
