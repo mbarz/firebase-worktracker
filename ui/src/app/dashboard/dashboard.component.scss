@@ -1,0 +1,36 @@
+@import './../../theme.scss';
+
+table {
+  width: 100%;
+  .actions-cell,
+  .time-cell {
+    white-space: nowrap;
+  }
+  .diff-cell.bad {
+    color: rgb(150, 50, 50);
+  }
+  .diff-cell.good {
+    color: rgb(50, 150, 50);
+  }
+
+  td {
+    padding: 5px;
+  }
+}
+.month-card-avatar {
+  display: flex;
+  align-items: center;
+  background: mat-color($primary);
+  color: white;
+  .mat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.create-item-for-day-button {
+  .mat-icon {
+    color: white;
+  }
+}

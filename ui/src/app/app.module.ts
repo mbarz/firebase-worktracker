@@ -17,6 +17,7 @@ import { DurationPipe } from './duration.pipe';
 import { FirestoreSettingsToken } from '@angular/fire/firestore';
 import { AddActivityDialogComponent } from './add-activity-dialog/add-activity-dialog.component';
 import { AdjustDayTargetDialogComponent } from './adjust-day-target-dialog/adjust-day-target-dialog.component';
+import { EditActivityDialogComponent } from './edit-activity-dialog/edit-activity-dialog.component';
 
 @NgModule({
   declarations: [
@@ -26,9 +27,14 @@ import { AdjustDayTargetDialogComponent } from './adjust-day-target-dialog/adjus
     DashboardComponent,
     DurationPipe,
     AddActivityDialogComponent,
+    AdjustDayTargetDialogComponent,
+    EditActivityDialogComponent
+  ],
+  entryComponents: [
+    AddActivityDialogComponent,
+    EditActivityDialogComponent,
     AdjustDayTargetDialogComponent
   ],
-  entryComponents: [AddActivityDialogComponent, AdjustDayTargetDialogComponent],
   imports: [
     BrowserModule,
     FormsModule,

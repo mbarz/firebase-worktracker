@@ -6,6 +6,7 @@
       placeholder="target"
       type="number"
       [(ngModel)]="target.minutes"
+      (keydown.enter)="submit()"
     />
   </mat-form-field>
 </mat-dialog-content>

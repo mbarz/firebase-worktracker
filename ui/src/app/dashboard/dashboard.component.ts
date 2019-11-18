@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { NEVER, Observable } from 'rxjs';
-import { DaysService, Day } from '../days.service';
-import { ItemDTO } from '../item';
-import { ItemsService } from '../items.service';
-import { SummaryService } from '../summary.service';
 import { MatDialog } from '@angular/material';
+import { NEVER, Observable } from 'rxjs';
 import { AddActivityDialogComponent } from '../add-activity-dialog/add-activity-dialog.component';
-import { MonthsService, MonthDTO } from '../months.service';
 import { AdjustDayTargetDialogComponent } from '../adjust-day-target-dialog/adjust-day-target-dialog.component';
+import { Day, DaysService } from '../days.service';
+import { ItemDTO, Item } from '../item';
+import { ItemsService } from '../items.service';
+import { MonthDTO, MonthsService } from '../months.service';
+import { SummaryService } from '../summary.service';
+import { DataSource } from '@angular/cdk/table';
+import { EditActivityDialogComponent } from '../edit-activity-dialog/edit-activity-dialog.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,6 +20,9 @@ export class DashboardComponent implements OnInit {
   currentDay$: Observable<Day> = NEVER;
   currentMonth$: Observable<MonthDTO> = NEVER;
   summary$: Observable<any> = NEVER;
+
+  displayedColumns = ['actions', 'day', 'diff'];
+  displayedItemColumns = ['actions', 'title', 'category', 'time'];
 
   constructor(
     private readonly daysService: DaysService,
@@ -39,35 +44,43 @@ export class DashboardComponent implements OnInit {
     this.itemsService.deleteItem(item).subscribe();
   }
 
-  openAddActivityDialog() {
+  editItem(item: Item) {
     const dlg = this.dialogService.open<
-      AddActivityDialogComponent,
-      AddActivityDialogComponent.Data,
+      EditActivityDialogComponent,
+      EditActivityDialogComponent.Data,
       ItemDTO
-    >(AddActivityDialogComponent, {
-      data: {},
-      disableClose: true
+    >(EditActivityDialogComponent, {
+      data: { activity: item.dto },
+      disableClose: true,
+      width: '400px',
+      maxWidth: '100vw'
     });
-    dlg.beforeClose().subscribe(item => {
-      if (item) {
-        this.itemsService.createItem(item).subscribe();
+    dlg.beforeClosed().subscribe(dto => {
+      if (dto) {
+        this.itemsService.updateItem(dto).subscribe();
       }
     });
   }
-  openAddActivityDialogForDay(day: string) {
+
+  openAddActivityDialog(day?: string) {
     const dlg = this.dialogService.open<
       AddActivityDialogComponent,
       AddActivityDialogComponent.Data,
       ItemDTO
     >(AddActivityDialogComponent, {
       data: { day },
-      disableClose: true
+      disableClose: true,
+      width: '400px',
+      maxWidth: '100vw'
     });
-    dlg.beforeClose().subscribe(item => {
+    dlg.beforeClosed().subscribe(item => {
       if (item) {
         this.itemsService.createItem(item).subscribe();
       }
     });
+  }
+  openAddActivityDialogForDay(day: string) {
+    this.openAddActivityDialog(day);
   }
 
   openDayTargetAdjustmentDialog(day: {
@@ -82,7 +95,7 @@ export class DashboardComponent implements OnInit {
       data: { day },
       disableClose: true
     });
-    dlg.beforeClose().subscribe(target => {
+    dlg.beforeClosed().subscribe(target => {
       if (target) {
         this.daysService.adjustDayTarget({ date: day.uid, target }).subscribe();
       }
