@@ -1,7 +1,7 @@
 import { createEventFactory, props, AppEventProxy } from './event-proxy';
 
 describe('EventProxy', () => {
-  it('should listen on events', () => {
+  it('should listen on events', async () => {
     const factoryA = createEventFactory('a', props<{ data: number }>());
     const factoryB = createEventFactory('b', props<{ data: string }>());
 
@@ -31,10 +31,10 @@ describe('EventProxy', () => {
     expect(eventsOfTypeB).toEqual([events[1]]);
 
     expect(eventsOfTypeA.length).toEqual(2);
-    proxy.dispatch(factoryA({ data: 4 }));
+    await proxy.dispatch(factoryA({ data: 4 }));
     expect(eventsOfTypeA.length).toEqual(3);
     listenerA.detach();
-    proxy.dispatch(factoryA({ data: 5 }));
+    await proxy.dispatch(factoryA({ data: 5 }));
     expect(eventsOfTypeA.length).toEqual(3);
   });
 });
