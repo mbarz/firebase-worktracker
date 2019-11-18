@@ -1,17 +1,26 @@
 import { Injectable } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { map, filter, switchMap } from 'rxjs/operators';
+import { MatDialog } from '@angular/material';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
 import * as actions from './actions';
-import { User } from './reducers';
+import { AddActivityDialogComponent } from './add-activity-dialog/add-activity-dialog.component';
 import { DaysService } from './days.service';
+import { ItemDTO } from './item';
+import { ItemsService } from './items.service';
+import { User } from './reducers';
+import { EditActivityDialogComponent } from './edit-activity-dialog/edit-activity-dialog.component';
+import { MonthsService } from './months.service';
 
 @Injectable()
 export class AppEffects {
   constructor(
     private readonly actions$: Actions,
     private readonly auth: AngularFireAuth,
-    private readonly daysService: DaysService
+    private readonly monthsService: MonthsService,
+    private readonly daysService: DaysService,
+    private readonly itemsService: ItemsService,
+    private readonly dialog: MatDialog
   ) {}
 
   setUser$ = createEffect(() =>
@@ -32,8 +41,8 @@ export class AppEffects {
   loadCurrentDay$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.setUser),
-      filter(({ user }) => !!user),
-      map(({ user }) => user as User),
+      map(({ user }) => user),
+      filter(inputIsTruthy),
       switchMap(user => {
         const date = new Date();
         const iso = date.toISOString().substring(0, 10);
@@ -43,4 +52,92 @@ export class AppEffects {
       })
     )
   );
+
+  loadCurrentMonth$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.setUser),
+      map(({ user }) => user),
+      filter(inputIsTruthy),
+      switchMap(user => {
+        return this.monthsService
+          .getCurrentMonth()
+          .pipe(
+            map(month => actions.receiveCurrentMonth({ month: month.dto }))
+          );
+      })
+    )
+  );
+
+  openActivityCreationDialog$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.openActivityCreationDialog),
+      map(({ day }) =>
+        this.dialog.open<
+          AddActivityDialogComponent,
+          AddActivityDialogComponent.Data,
+          ItemDTO
+        >(AddActivityDialogComponent, {
+          data: { day },
+          disableClose: true,
+          width: '400px',
+          maxWidth: '100vw'
+        })
+      ),
+      switchMap(dlg => dlg.beforeClosed()),
+      filter(inputIsTruthy),
+      map(item => actions.createActivity({ activity: item }))
+    )
+  );
+
+  openActivityEditDialog$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.openActivityEditDialog),
+      map(({ activity }) =>
+        this.dialog.open<
+          EditActivityDialogComponent,
+          EditActivityDialogComponent.Data,
+          ItemDTO
+        >(EditActivityDialogComponent, {
+          data: { activity },
+          disableClose: true,
+          width: '400px',
+          maxWidth: '100vw'
+        })
+      ),
+      switchMap(dlg => dlg.beforeClosed()),
+      filter(inputIsTruthy),
+      map(item => actions.updateActivity({ activity: item }))
+    )
+  );
+
+  createActivity$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(actions.createActivity),
+        switchMap(({ activity }) => this.itemsService.createItem(activity))
+      ),
+    { dispatch: false }
+  );
+
+  updateActivity$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(actions.updateActivity),
+        switchMap(({ activity }) => this.itemsService.updateItem(activity))
+      ),
+    { dispatch: false }
+  );
+
+  deleteActivity$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(actions.deleteActivity),
+        switchMap(({ activity }) => this.itemsService.deleteItem(activity))
+      ),
+    { dispatch: false }
+  );
+}
+
+function inputIsTruthy<T>(input: null | undefined | T): input is T {
+  return input !== null && input !== undefined && !!input;
 }

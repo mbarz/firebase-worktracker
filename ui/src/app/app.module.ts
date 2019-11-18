@@ -18,11 +18,13 @@ import { AddActivityDialogComponent } from './add-activity-dialog/add-activity-d
 import { AdjustDayTargetDialogComponent } from './adjust-day-target-dialog/adjust-day-target-dialog.component';
 import { EditActivityDialogComponent } from './edit-activity-dialog/edit-activity-dialog.component';
 import { StoreModule } from '@ngrx/store';
-import { reducers, metaReducers } from './reducers';
+import { reducers } from './reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { AppEffects } from './app.effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
+import { DayCardComponent } from './day-card/day-card.component';
+import { MonthCardComponent } from './month-card/month-card.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,9 @@ import { environment } from '../environments/environment';
     DurationPipe,
     AddActivityDialogComponent,
     AdjustDayTargetDialogComponent,
-    EditActivityDialogComponent
+    EditActivityDialogComponent,
+    DayCardComponent,
+    MonthCardComponent
   ],
   entryComponents: [
     AddActivityDialogComponent,
@@ -52,7 +56,6 @@ import { environment } from '../environments/environment';
     MaterialModule,
     BrowserAnimationsModule,
     StoreModule.forRoot(reducers, {
-      metaReducers,
       runtimeChecks: {
         strictStateImmutability: true,
         strictActionImmutability: true

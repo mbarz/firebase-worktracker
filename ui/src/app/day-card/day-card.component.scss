@@ -1,5 +1,3 @@
-@import './../../theme.scss';
-
 table {
   width: 100%;
   .actions-cell,
@@ -15,16 +13,5 @@ table {
 
   td {
     padding: 5px;
-  }
-}
-
-app-day-card {
-  display: block;
-  margin-bottom: 10px;
-}
-
-.create-item-for-day-button {
-  .mat-icon {
-    color: white;
   }
 }

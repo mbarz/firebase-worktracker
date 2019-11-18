@@ -26,6 +26,8 @@ app-root {
 
 .content-area {
   padding: 10px;
+  max-width: 800px;
+  margin: auto;
   .mat-card + .mat-card {
     margin-top: 10px;
   }
@@ -77,4 +79,25 @@ app-root {
   white-space: nowrap;
   word-wrap: normal;
   direction: ltr;
+}
+
+.mat-icon.fa {
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+}
+
+.icon-card-avatar {
+  display: flex;
+  align-items: center;
+  background: mat-color($primary);
+  color: white;
+  .mat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }

@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Observable, of, throwError, EMPTY } from 'rxjs';
-import { map, switchMap, take } from 'rxjs/operators';
+import { Observable, of, EMPTY, from } from 'rxjs';
+import { map, switchMap, take, tap } from 'rxjs/operators';
 import { Item, ItemDTO } from './item';
+import { StoredDay } from './reducers';
 
 export type DayDTO = {
   uid: string;
@@ -17,10 +18,12 @@ export class Day {
   };
   uid: string;
   items: Item[];
-  constructor(public dto: DayDTO) {
+  loading = false;
+  constructor(public dto: StoredDay) {
     this.uid = dto.uid;
     this.items = dto.items.map(item => new Item(item));
     this.target = dto.target;
+    this.loading = dto.loading || false;
   }
 
   get duration() {
@@ -89,9 +92,16 @@ export class DaysService {
     date: string;
     target: { minutes: number };
   }) {
-    return this.collection(user)
-      .doc<DayDTO>(date)
-      .update({ target });
+    const doc = this.collection(user).doc<DayDTO>(date);
+    return doc.get().pipe(
+      take(1),
+      tap(snap => console.log({ exists: snap.exists })),
+      switchMap(snap =>
+        snap.exists
+          ? from(doc.update({ target }))
+          : from(doc.set({ uid: date, items: [], target }))
+      )
+    );
   }
 
   private collection(user: string) {

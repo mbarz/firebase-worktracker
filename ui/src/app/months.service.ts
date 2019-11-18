@@ -8,6 +8,7 @@ import {
 import { Observable } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { DayDTO } from './days.service';
+import { StoredMonth } from './reducers';
 
 export type CategoryTrackingSummary = {
   uid: string;
@@ -35,10 +36,12 @@ export class Month {
     target: { minutes: number };
     reached: { minutes: number };
   }[];
+  loading = false;
 
-  constructor(private readonly data: MonthDTO) {
+  constructor(public readonly dto: StoredMonth) {
+    this.loading = dto.loading || false;
     const weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-    this.pastDays = data.days
+    this.pastDays = dto.days
       .filter(day => {
         const d = new Date(day.uid);
         return d.getTime() < Date.now();
@@ -60,14 +63,14 @@ export class Month {
   }
 
   get uid() {
-    return this.data.uid;
+    return this.dto.uid;
   }
 
   get days() {
-    return this.data.days;
+    return this.dto.days;
   }
   get categories() {
-    return this.data.categories;
+    return this.dto.categories;
   }
 }
 
