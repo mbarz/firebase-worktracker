@@ -1,4 +1,4 @@
-import { ActionReducerMap, createReducer, on } from '@ngrx/store';
+import { ActionReducerMap, createReducer, on, Action } from '@ngrx/store';
 import * as actions from './../actions';
 import { DayDTO } from '../days.service';
 import { MonthDTO } from '../months.service';
@@ -37,6 +37,10 @@ const authReducer = createReducer<AuthState>(
   on(actions.setUser, (state, action) => ({ ...state, user: action.user }))
 );
 
+export function reduceAuth(state: AuthState | undefined, action: Action) {
+  return authReducer(state, action);
+}
+
 const appReducer = createReducer<AppState>(
   initialAppState,
   on(actions.receiveCurrentDay, (s, a) => ({ ...s, currentDay: a.day })),
@@ -49,9 +53,13 @@ const appReducer = createReducer<AppState>(
   )
 );
 
+export function reduceApp(state: AppState | undefined, action: Action) {
+  return appReducer(state, action);
+}
+
 export const reducers: ActionReducerMap<State> = {
-  auth: authReducer,
-  app: appReducer
+  auth: reduceAuth,
+  app: reduceApp
 };
 
 function setAffectedLoadingFlags(
