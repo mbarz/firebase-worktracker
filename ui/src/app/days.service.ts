@@ -57,7 +57,7 @@ export class DaysService {
     return this.collection(user.uid).valueChanges();
   }
 
-  getDayForUser(userId: string, date: string): Observable<DayDTO | undefined> {
+  getDayForUser(userId: string, date: string): Observable<DayDTO> {
     return this.collection(userId)
       .doc<DayDTO>(date)
       .snapshotChanges()

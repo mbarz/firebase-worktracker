@@ -1,0 +1,8 @@
+<div class="sub-header">
+  <h1>{{ monthName }} {{ year }}</h1>
+</div>
+<ng-container *ngIf="month$ | async as month">
+  <div class="content-area">
+    <app-month-card [month]="month"></app-month-card>
+  </div>
+</ng-container>

@@ -9,10 +9,10 @@
       ></mat-icon>
     </div>
     <mat-card-title>{{ month.uid }}</mat-card-title>
-    <mat-card-subtitle
-      >current month reached {{ month.reached.minutes | duration }} of
-      {{ month.target.minutes | duration }}</mat-card-subtitle
-    >
+    <mat-card-subtitle>
+      reached {{ month.reached.minutes | duration }} of
+      {{ month.target.minutes | duration }}
+    </mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
     <mat-progress-bar
@@ -48,7 +48,11 @@
       </ng-container>
       <ng-container matColumnDef="day">
         <th mat-header-cell *matHeaderCellDef scope="col">Day</th>
-        <td mat-cell *matCellDef="let day">{{ day.weekDay }}, {{ day.uid }}</td>
+        <td mat-cell *matCellDef="let day">
+          <a routerLink="/days/{{ day.uid }}">
+            {{ day.weekDay }}, {{ day.uid }}
+          </a>
+        </td>
       </ng-container>
       <ng-container matColumnDef="tracked">
         <th mat-header-cell *matHeaderCellDef scope="col"></th>

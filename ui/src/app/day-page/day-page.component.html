@@ -1,0 +1,21 @@
+<div class="sub-header">
+  <h1 class="month-link" routerLink="/months/{{ month.id }}">
+    {{ month.text }} {{ year }}
+  </h1>
+  <span>&raquo;</span>
+  <h1>{{ dayName }}</h1>
+  <div class="spacer"></div>
+  <div class="actions">
+    <button mat-icon-button routerLink="/days/{{ previousDay }}">
+      <mat-icon fontSet="fa" fontIcon="fa-step-backward" inline></mat-icon>
+    </button>
+    <button mat-icon-button routerLink="/days/{{ nextDay }}">
+      <mat-icon fontSet="fa" fontIcon="fa-step-forward" inline></mat-icon>
+    </button>
+  </div>
+</div>
+<ng-container *ngIf="day$ | async as day">
+  <div class="content-area">
+    <app-day-card [day]="day"></app-day-card>
+  </div>
+</ng-container>

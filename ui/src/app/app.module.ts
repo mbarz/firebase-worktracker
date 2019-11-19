@@ -25,6 +25,8 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
 import { DayCardComponent } from './day-card/day-card.component';
 import { MonthCardComponent } from './month-card/month-card.component';
+import { DayPageComponent } from './day-page/day-page.component';
+import { MonthPageComponent } from './month-page/month-page.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,9 @@ import { MonthCardComponent } from './month-card/month-card.component';
     AdjustDayTargetDialogComponent,
     EditActivityDialogComponent,
     DayCardComponent,
-    MonthCardComponent
+    MonthCardComponent,
+    DayPageComponent,
+    MonthPageComponent
   ],
   entryComponents: [
     AddActivityDialogComponent,

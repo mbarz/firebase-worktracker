@@ -13,5 +13,10 @@ table {
 
   td {
     padding: 5px;
+    a {
+      color: inherit;
+      cursor: pointer;
+      text-decoration: none;
+    }
   }
 }

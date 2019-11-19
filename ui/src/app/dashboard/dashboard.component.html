@@ -6,10 +6,6 @@
   <div class="actions"></div>
 </div>
 
-<!-- <div class="content-area" *ngIf="summary$ | async as summary">
-  <pre>{{ summary | json }}</pre>
-</div> -->
-
 <div class="content-area">
   <app-day-card [day]="currentDay$ | async"></app-day-card>
   <app-month-card [month]="currentMonth$ | async"></app-month-card>

@@ -9,7 +9,10 @@
       ></mat-icon>
     </div>
     <mat-card-title>{{ day.uid }}</mat-card-title>
-    <mat-card-subtitle>current day</mat-card-subtitle>
+    <mat-card-subtitle>
+      reached {{ day.duration.minutes | duration }} of
+      {{ day.target.minutes | duration }}
+    </mat-card-subtitle>
     <div class="spacer"></div>
     <div>
       <button

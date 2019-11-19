@@ -91,7 +91,10 @@ export class MonthsService {
     const now = new Date();
     const month = now.toISOString().substring(0, 7);
     console.log('loading month', month);
+    return this.getMonth(month);
+  }
 
+  public getMonth(month: string): Observable<Month> {
     return this.user$().pipe(
       map(user => this.collection(user.uid)),
       switchMap(collection => this.getMonthFromCollection(collection, month))
