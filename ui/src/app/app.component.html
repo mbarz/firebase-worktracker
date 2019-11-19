@@ -1,13 +1,17 @@
 <div class="main-header mat-elevation-z6" *ngIf="user$ | async as user">
   <nav>
     <a mat-button routerLink="/" routerLinkActive="active">Worktracker</a>
-    <a mat-button routerLink="/items" routerLinkActive="active">Items</a>
   </nav>
   <div class="spacer"></div>
-  <span class="user-name">{{ user.userName }}</span>
-  <button mat-button (click)="logout()">
-    Logout
+
+  <button mat-icon-button [matMenuTriggerFor]="appMenu">
+    <mat-icon>person</mat-icon>
   </button>
+  <mat-menu #appMenu="matMenu">
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>exit_to_app</mat-icon><span>Logout</span>
+    </button>
+  </mat-menu>
 </div>
 
 <router-outlet></router-outlet>
