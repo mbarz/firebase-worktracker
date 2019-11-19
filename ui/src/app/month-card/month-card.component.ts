@@ -1,15 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Month } from '../months.service';
-import { Store } from '@ngrx/store';
-import {
-  openActivityCreationDialog,
-  openActivityEditDialog,
-  deleteActivity
-} from '../actions';
-import { Item } from '../item';
-import { AdjustDayTargetDialogComponent } from '../adjust-day-target-dialog/adjust-day-target-dialog.component';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
+import { Store } from '@ngrx/store';
+import { openActivityCreationDialog } from '../actions';
+import { AdjustDayTargetDialogComponent } from '../adjust-day-target-dialog/adjust-day-target-dialog.component';
 import { DaysService } from '../days.service';
+import { Month } from '../months.service';
 
 @Component({
   selector: 'app-month-card',

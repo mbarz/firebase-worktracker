@@ -2,14 +2,13 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { MatDialog } from '@angular/material';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { filter, map, switchMap, tap } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 import * as actions from './actions';
 import { AddActivityDialogComponent } from './add-activity-dialog/add-activity-dialog.component';
 import { DaysService } from './days.service';
+import { EditActivityDialogComponent } from './edit-activity-dialog/edit-activity-dialog.component';
 import { ItemDTO } from './item';
 import { ItemsService } from './items.service';
-import { User } from './reducers';
-import { EditActivityDialogComponent } from './edit-activity-dialog/edit-activity-dialog.component';
 import { MonthsService } from './months.service';
 
 @Injectable()
@@ -58,7 +57,7 @@ export class AppEffects {
       ofType(actions.setUser),
       map(({ user }) => user),
       filter(inputIsTruthy),
-      switchMap(user => {
+      switchMap(() => {
         return this.monthsService
           .getCurrentMonth()
           .pipe(

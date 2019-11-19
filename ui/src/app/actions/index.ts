@@ -1,7 +1,8 @@
 import { createAction, props } from '@ngrx/store';
-import { Day, DayDTO } from '../days.service';
+import { DayDTO } from '../days.service';
 import { ItemDTO } from '../item';
 import { MonthDTO } from '../months.service';
+import { StoredDay } from '../reducers';
 
 export const setUser = createAction(
   '[App] Set User',
@@ -21,7 +22,7 @@ export const loadSummary = createAction('[App] Load Summary');
 
 export const openActivityCreationDialog = createAction(
   '[App] Open Activity Creation Dialog',
-  props<{ day?: string }>()
+  props<{ day?: StoredDay | string }>()
 );
 
 export const openActivityEditDialog = createAction(

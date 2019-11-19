@@ -14,7 +14,7 @@ import { Item } from '../item';
   styleUrls: ['./day-card.component.scss']
 })
 export class DayCardComponent implements OnInit {
-  @Input() day?: Day;
+  @Input() day!: Day;
 
   displayedItemColumns = ['actions', 'title', 'category', 'time'];
 
@@ -23,8 +23,7 @@ export class DayCardComponent implements OnInit {
   ngOnInit() {}
 
   createItem() {
-    const day = { day: this.day ? this.day.uid : undefined };
-    this.store.dispatch(openActivityCreationDialog(day));
+    this.store.dispatch(openActivityCreationDialog({ day: this.day.dto }));
   }
 
   editItem(item: Item) {

@@ -62,7 +62,11 @@ export class DaysService {
       .doc<DayDTO>(date)
       .snapshotChanges()
       .pipe(
-        map(snap => (snap.payload.exists ? snap.payload.data() : undefined))
+        map(snap =>
+          snap.payload.exists
+            ? snap.payload.data()
+            : { uid: date, items: [], target: { minutes: 420 } }
+        )
       );
   }
 
