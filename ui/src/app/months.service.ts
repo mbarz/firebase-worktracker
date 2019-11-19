@@ -90,7 +90,6 @@ export class MonthsService {
   public getCurrentMonth(): Observable<Month> {
     const now = new Date();
     const month = now.toISOString().substring(0, 7);
-    console.log('loading month', month);
     return this.getMonth(month);
   }
 

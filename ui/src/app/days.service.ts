@@ -99,7 +99,6 @@ export class DaysService {
     const doc = this.collection(user).doc<DayDTO>(date);
     return doc.get().pipe(
       take(1),
-      tap(snap => console.log({ exists: snap.exists })),
       switchMap(snap =>
         snap.exists
           ? from(doc.update({ target }))

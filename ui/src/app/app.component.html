@@ -4,6 +4,9 @@
   </nav>
   <div class="spacer"></div>
 
+  <span *ngIf="balance$ | async as balance">{{
+    balance.minutes | duration
+  }}</span>
   <button mat-icon-button [matMenuTriggerFor]="appMenu">
     <mat-icon>person</mat-icon>
   </button>

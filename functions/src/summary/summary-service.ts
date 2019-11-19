@@ -27,6 +27,7 @@ export class SummaryService {
       : { trackedMonths: [] };
 
     const m = this.getMonthFromSummary(summary, after.uid);
+
     m.balance = { minutes: 0 };
     after.days
       .map(d => d.reached.minutes - d.target.minutes)
@@ -50,7 +51,7 @@ export class SummaryService {
   private getSummaryDocument(user: string) {
     return this.documentService.getDocument<Summary>({
       path: 'userData',
-      name: 'user'
+      name: user
     });
   }
 }

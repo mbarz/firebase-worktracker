@@ -3,6 +3,7 @@ import * as actions from './../actions';
 import { DayDTO } from '../days.service';
 import { MonthDTO } from '../months.service';
 import { ItemDTO } from '../item';
+import { UsersSummary } from '../summary.service';
 
 export type User = {
   uid: string;
@@ -24,8 +25,9 @@ export type StoredMonth = MonthDTO & {
 export type AppState = {
   currentDay?: StoredDay;
   currentMonth?: StoredMonth;
+  summary: UsersSummary;
 };
-export const initialAppState: AppState = {};
+export const initialAppState: AppState = { summary: { trackedMonths: [] } };
 
 export interface State {
   auth: AuthState;
@@ -50,7 +52,8 @@ const appReducer = createReducer<AppState>(
     actions.deleteActivity,
     actions.updateActivity,
     (s, a) => setAffectedLoadingFlags(s, a)
-  )
+  ),
+  on(actions.receiveSummary, (s, a) => ({ ...s, summary: a.summary }))
 );
 
 export function reduceApp(state: AppState | undefined, action: Action) {
@@ -75,12 +78,6 @@ function setAffectedLoadingFlags(
   const isChangedItemInCurrentMonth =
     !!currentMonth && date.startsWith(currentMonth.uid);
 
-  console.log({
-    date,
-    month: currentMonth ? currentMonth.uid : '-',
-    isChangedItemInCurrentMonth
-  });
-
   const updatedMonth = currentMonth
     ? {
         ...currentMonth,
@@ -93,7 +90,6 @@ function setAffectedLoadingFlags(
         loading: isChangedItemInCurrentDay
       }
     : undefined;
-  console.log({ updatedMonth });
   return {
     ...state,
     currentDay: updatedDay,

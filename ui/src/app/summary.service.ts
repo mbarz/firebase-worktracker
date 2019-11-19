@@ -1,8 +1,14 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { switchMap, take, map, tap } from 'rxjs/operators';
+import { switchMap, take, map } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
+
+export type UsersSummary = {
+  trackedMonths: { uid: string; balance: { minutes: number } }[];
+};
+
+const defaultSummary: UsersSummary = { trackedMonths: [] };
 
 @Injectable({
   providedIn: 'root'
@@ -13,29 +19,21 @@ export class SummaryService {
     private readonly firestore: AngularFirestore
   ) {}
 
-  getSummary(): Observable<any> {
+  getSummary(): Observable<UsersSummary> {
     return this.auth.user.pipe(
       take(1),
       switchMap(user => {
-        return user
-          ? this.getSummaryForUser(user)
-          : of({ message: 'no summary for user' });
+        return user ? this.getSummaryForUser(user.uid) : of(defaultSummary);
       })
     );
   }
-  getSummaryForUser(user: firebase.User): Observable<any> {
-    console.log(`loading summary for ${user.displayName}`);
-    return this.doc(user.uid)
+  getSummaryForUser(user: string): Observable<UsersSummary> {
+    return this.doc(user)
       .snapshotChanges()
-      .pipe(
-        map(s => s.payload.data()),
-        tap(s => {
-          console.log(s);
-        })
-      );
+      .pipe(map(s => s.payload.data() || defaultSummary));
   }
 
   private doc(user: string) {
-    return this.firestore.collection<any>(`userData`).doc(user);
+    return this.firestore.collection(`userData`).doc<UsersSummary>(user);
   }
 }

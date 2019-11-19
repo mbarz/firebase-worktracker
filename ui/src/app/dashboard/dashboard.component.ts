@@ -1,12 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
 import { Store } from '@ngrx/store';
 import { NEVER, Observable } from 'rxjs';
-import { AddActivityDialogComponent } from '../add-activity-dialog/add-activity-dialog.component';
-import { AdjustDayTargetDialogComponent } from '../adjust-day-target-dialog/adjust-day-target-dialog.component';
-import { Day, DaysService } from '../days.service';
-import { ItemDTO } from '../item';
-import { ItemsService } from '../items.service';
+import { Day } from '../days.service';
 import { MonthDTO } from '../months.service';
 import { State } from '../reducers';
 import { getCurrentDay, getCurrentMonth } from '../selectors';

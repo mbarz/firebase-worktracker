@@ -3,6 +3,7 @@ import { DayDTO } from '../days.service';
 import { ItemDTO } from '../item';
 import { MonthDTO } from '../months.service';
 import { StoredDay } from '../reducers';
+import { UsersSummary } from '../summary.service';
 
 export const setUser = createAction(
   '[App] Set User',
@@ -19,6 +20,10 @@ export const receiveCurrentMonth = createAction(
   props<{ month?: MonthDTO }>()
 );
 export const loadSummary = createAction('[App] Load Summary');
+export const receiveSummary = createAction(
+  '[App] Receive Summary',
+  props<{ summary: UsersSummary }>()
+);
 
 export const openActivityCreationDialog = createAction(
   '[App] Open Activity Creation Dialog',

@@ -23,3 +23,21 @@ export const getCurrentMonth = createSelector(getAppState, s => {
     ? new Month(s.currentMonth)
     : new Month({ uid: iso, days: [], categories: [], loading: true });
 });
+
+export const getBalance = createSelector(getAppState, s => {
+  const now = new Date();
+  now.setHours(12);
+  const currentMonth = now.toISOString().substring(0, 7);
+  const pastMonths = s.summary.trackedMonths.filter(
+    t => t.uid.localeCompare(currentMonth) < 0
+  );
+  const balance = {
+    minutes: pastMonths.map(m => m.balance).reduce((a, b) => a + b.minutes, 0)
+  };
+  if (s.currentMonth) {
+    const m = new Month(s.currentMonth);
+    balance.minutes += m.reached.minutes - m.target.minutes;
+  }
+
+  return balance;
+});

@@ -10,12 +10,14 @@ import { EditActivityDialogComponent } from './edit-activity-dialog/edit-activit
 import { ItemDTO } from './item';
 import { ItemsService } from './items.service';
 import { MonthsService } from './months.service';
+import { SummaryService } from './summary.service';
 
 @Injectable()
 export class AppEffects {
   constructor(
     private readonly actions$: Actions,
     private readonly auth: AngularFireAuth,
+    private readonly summaryService: SummaryService,
     private readonly monthsService: MonthsService,
     private readonly daysService: DaysService,
     private readonly itemsService: ItemsService,
@@ -63,6 +65,19 @@ export class AppEffects {
           .pipe(
             map(month => actions.receiveCurrentMonth({ month: month.dto }))
           );
+      })
+    )
+  );
+
+  loadSummary$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(actions.setUser),
+      map(({ user }) => user),
+      filter(inputIsTruthy),
+      switchMap(user => {
+        return this.summaryService
+          .getSummaryForUser(user.uid)
+          .pipe(map(summary => actions.receiveSummary({ summary })));
       })
     )
   );
