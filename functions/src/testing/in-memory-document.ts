@@ -1,7 +1,11 @@
 import { WritableDocument } from '../documents';
 
 export class InMemoryDocument<T> implements WritableDocument<T> {
-  constructor(private readonly data: T) {}
+  constructor(private readonly data?: T) {}
+
+  exists() {
+    return Promise.resolve(this.data !== undefined && this.data !== null);
+  }
 
   setData(data: T): Promise<T> {
     Object.assign(this.data, data);

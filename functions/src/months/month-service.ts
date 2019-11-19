@@ -21,7 +21,11 @@ export class MonthService {
   ) {
     const month = change.after.uid.substring(0, 7);
     const doc = await this.getMonthDocumentForDay(user, month);
-    const data = await doc.getData();
+
+    const data: Month = (await doc.exists())
+      ? await doc.getData()
+      : createDefaultDataForMonth(month);
+
     this.updateCategories(data, change);
     this.updateDaySummary(data, change.after);
     return doc.setData(data);
@@ -86,10 +90,9 @@ export class MonthService {
 
   private async getMonthDocumentForDay(user: string, month: string) {
     console.log('getting', month);
-    return await this.documentService.getOrCreateDocument<Month>({
+    return await this.documentService.getDocument<Month>({
       path: `userData/${user}/months`,
-      name: month,
-      defaultData: createDefaultDataForMonth(month)
+      name: month
     });
   }
 }

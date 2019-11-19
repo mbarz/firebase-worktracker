@@ -21,7 +21,10 @@ export class SummaryService {
     const after = change.after;
 
     const doc = await this.getSummaryDocument(user);
-    const summary = await doc.getData();
+    const exists = await doc.exists();
+    const summary: Summary = exists
+      ? await doc.getData()
+      : { trackedMonths: [] };
 
     const m = this.getMonthFromSummary(summary, after.uid);
     m.balance = { minutes: 0 };
@@ -44,11 +47,10 @@ export class SummaryService {
     return month;
   }
 
-  private async getSummaryDocument(user: string) {
-    return await this.documentService.getOrCreateDocument<Summary>({
-      path: `userData`,
-      name: user,
-      defaultData: { trackedMonths: [] }
+  private getSummaryDocument(user: string) {
+    return this.documentService.getDocument<Summary>({
+      path: 'userData',
+      name: 'user'
     });
   }
 }
