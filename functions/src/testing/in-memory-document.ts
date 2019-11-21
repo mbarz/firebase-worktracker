@@ -1,28 +1,44 @@
 import { WritableDocument } from '../documents';
+import { Memory } from './memory';
 
 export class InMemoryDocument<T> implements WritableDocument<T> {
-  constructor(private readonly data?: T) {}
+  constructor(
+    private readonly memory: Memory,
+    private readonly path: string,
+    private readonly name: string
+  ) {}
 
   exists() {
-    return Promise.resolve(this.data !== undefined && this.data !== null);
+    return this.getData().then(data => !!data);
   }
 
   setData(data: T): Promise<T> {
-    Object.assign(this.data, data);
+    let collection = this.memory[this.path];
+    if (!collection) {
+      collection = {};
+      this.memory[this.path] = collection;
+    }
+    collection[this.name] = data;
     return Promise.resolve(this.copy());
   }
-  updateData(data: Partial<T>): Promise<Partial<T>> {
-    Object.assign(this.data, {
-      ...(this.data || {}),
+  async updateData(data: Partial<T>): Promise<Partial<T>> {
+    const old = await this.getData();
+    const updated = {
+      ...(old || {}),
       ...(JSON.parse(JSON.stringify(data)) as T)
-    });
-    return Promise.resolve(this.copy());
+    };
+    return this.setData(updated).then(() => this.copy());
   }
   getData(): Promise<T> {
-    return Promise.resolve(this.copy());
+    const collection = this.memory[this.path];
+    if (!collection) {
+      return Promise.resolve(undefined as any);
+    }
+    return Promise.resolve(collection[this.name]);
   }
 
   private copy() {
-    return JSON.parse(JSON.stringify(this.data));
+    const data = this.getData();
+    return data ? JSON.parse(JSON.stringify(data)) : undefined;
   }
 }

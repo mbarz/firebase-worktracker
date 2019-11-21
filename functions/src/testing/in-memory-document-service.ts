@@ -1,11 +1,6 @@
 import { DocumentService, WritableDocument } from '../documents';
 import { InMemoryDocument } from './in-memory-document';
-
-type Memory = {
-  [path: string]: {
-    [name: string]: any;
-  };
-};
+import { Memory } from './memory';
 
 export class InMemoryDocumentService implements DocumentService {
   constructor(private memory: Memory = {}) {}
@@ -14,8 +9,9 @@ export class InMemoryDocumentService implements DocumentService {
     path: string;
     name: string;
   }): Promise<WritableDocument<T>> {
-    const data = (this.memory[args.path] || {})[args.name];
-    return Promise.resolve(new InMemoryDocument<T>(data));
+    return Promise.resolve(
+      new InMemoryDocument<T>(this.memory, args.path, args.name)
+    );
   }
 
   getState() {
