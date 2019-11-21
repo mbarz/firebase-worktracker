@@ -22,6 +22,7 @@ export class Day {
   constructor(public dto: StoredDay) {
     this.uid = dto.uid;
     this.items = dto.items.map(item => new Item(item));
+    this.items.sort((a, b) => a.start.getTime() - b.start.getTime());
     this.target = dto.target;
     this.loading = dto.loading || false;
   }
@@ -66,10 +67,7 @@ export class DaysService {
           snap.payload.exists
             ? snap.payload.data()
             : { uid: date, items: [], target: { minutes: 420 } }
-        ),
-        tap(data => {
-          data.items.sort((a, b) => a.start.localeCompare(b.start));
-        })
+        )
       );
   }
 
