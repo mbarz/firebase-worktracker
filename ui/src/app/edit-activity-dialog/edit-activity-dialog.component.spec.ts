@@ -1,6 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditActivityDialogComponent } from './edit-activity-dialog.component';
+import { MaterialModule } from '../material/material.module';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 describe('EditActivityDialogComponent', () => {
   let component: EditActivityDialogComponent;
@@ -8,9 +12,18 @@ describe('EditActivityDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EditActivityDialogComponent ]
-    })
-    .compileComponents();
+      imports: [
+        MaterialModule,
+        NoopAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule
+      ],
+      providers: [
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: { activity: {} } }
+      ],
+      declarations: [EditActivityDialogComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

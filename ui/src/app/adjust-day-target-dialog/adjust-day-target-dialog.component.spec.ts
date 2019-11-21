@@ -1,6 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AdjustDayTargetDialogComponent } from './adjust-day-target-dialog.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MaterialModule } from '../material/material.module';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 describe('AdjustDayTargetDialogComponent', () => {
   let component: AdjustDayTargetDialogComponent;
@@ -8,9 +12,21 @@ describe('AdjustDayTargetDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AdjustDayTargetDialogComponent ]
-    })
-    .compileComponents();
+      imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        MaterialModule,
+        NoopAnimationsModule
+      ],
+      providers: [
+        { provide: MatDialogRef, useValue: {} },
+        {
+          provide: MAT_DIALOG_DATA,
+          useValue: { day: { target: { minutes: 0 } } }
+        }
+      ],
+      declarations: [AdjustDayTargetDialogComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { NEVER, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Day } from '../days.service';
 import { MonthDTO } from '../months.service';
 import { State } from '../reducers';
 import { getCurrentDay, getCurrentMonth } from '../selectors';
-import { SummaryService } from '../summary.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,16 +13,9 @@ import { SummaryService } from '../summary.service';
 })
 export class DashboardComponent implements OnInit {
   currentDay$: Observable<Day> = this.store.select(getCurrentDay);
-  currentMonth$: Observable<MonthDTO> = NEVER;
-  summary$: Observable<any> = NEVER;
+  currentMonth$: Observable<MonthDTO> = this.store.select(getCurrentMonth);
 
-  constructor(
-    private readonly summaryService: SummaryService,
-    private readonly store: Store<State>
-  ) {}
+  constructor(private readonly store: Store<State>) {}
 
-  ngOnInit() {
-    this.currentMonth$ = this.store.select(getCurrentMonth);
-    this.summary$ = this.summaryService.getSummary();
-  }
+  ngOnInit() {}
 }

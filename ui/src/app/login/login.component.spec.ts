@@ -1,5 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { AngularFireAuth } from '@angular/fire/auth';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { Router } from '@angular/router';
+import { MaterialModule } from '../material/material.module';
 import { LoginComponent } from './login.component';
 
 describe('LoginComponent', () => {
@@ -8,9 +11,13 @@ describe('LoginComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LoginComponent ]
-    })
-    .compileComponents();
+      imports: [MaterialModule, NoopAnimationsModule],
+      providers: [
+        { provide: AngularFireAuth, useValue: {} },
+        { provide: Router, useValue: {} }
+      ],
+      declarations: [LoginComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

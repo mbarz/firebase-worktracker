@@ -11,8 +11,6 @@ import * as fromApp from './selectors';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'firebase-worktracker-ui';
-
   user$ = this.store.select(fromApp.getUser);
   balance$ = this.store.select(fromApp.getBalance);
 

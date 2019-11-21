@@ -1,16 +1,22 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { DurationPipe } from './duration.pipe';
+import { CommonModule } from '@angular/common';
+import { MaterialModule } from './material/material.module';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { provideMockStore } from '@ngrx/store/testing';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule
+      imports: [RouterTestingModule, MaterialModule, NoopAnimationsModule],
+      providers: [
+        provideMockStore(),
+        { provide: AngularFireAuth, useValue: {} }
       ],
-      declarations: [
-        AppComponent
-      ],
+      declarations: [AppComponent, DurationPipe]
     }).compileComponents();
   }));
 
@@ -18,18 +24,5 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
-  });
-
-  it(`should have as title 'firebase-worktracker-ui'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('firebase-worktracker-ui');
-  });
-
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('firebase-worktracker-ui app is running!');
   });
 });

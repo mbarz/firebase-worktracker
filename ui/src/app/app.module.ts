@@ -9,7 +9,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { ItemListComponent } from './item-list/item-list.component';
 import { LoginComponent } from './login/login.component';
 import { MaterialModule } from './material/material.module';
 import { DurationPipe } from './duration.pipe';
@@ -31,7 +30,6 @@ import { MonthPageComponent } from './month-page/month-page.component';
 @NgModule({
   declarations: [
     AppComponent,
-    ItemListComponent,
     LoginComponent,
     DashboardComponent,
     DurationPipe,
