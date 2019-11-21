@@ -66,7 +66,10 @@ export class DaysService {
           snap.payload.exists
             ? snap.payload.data()
             : { uid: date, items: [], target: { minutes: 420 } }
-        )
+        ),
+        tap(data => {
+          data.items.sort((a, b) => a.start.localeCompare(b.start));
+        })
       );
   }
 
