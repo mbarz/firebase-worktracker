@@ -23,7 +23,7 @@ describe('MonthService', () => {
           category: 'foo',
           date: '2019-10-09',
           start: '10:00',
-          end: '12:00'
+          end: '12:15'
         }
       ],
       target: { minutes: 300 },
@@ -42,7 +42,7 @@ describe('MonthService', () => {
     const data: Month = state['userData/max/months']['2019-10'];
     expect(data.uid).toEqual('2019-10');
     expect(data.categories).toEqual([
-      { uid: 'foo', tracked: { minutes: 120 } }
+      { uid: 'foo', tracked: { minutes: 135 } }
     ]);
     expect(data.days.length).toEqual(31);
     expect(data.days.slice(0, 10)).toEqual([
@@ -55,7 +55,7 @@ describe('MonthService', () => {
       { reached: { minutes: 0 }, target: { minutes: 420 }, uid: '2019-10-07' },
       { reached: { minutes: 0 }, target: { minutes: 420 }, uid: '2019-10-08' },
       {
-        reached: { minutes: 120 },
+        reached: { minutes: 135 },
         target: { minutes: 300 },
         uid: '2019-10-09'
       },

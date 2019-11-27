@@ -31,8 +31,12 @@ export class MonthPageComponent implements OnInit {
         this.monthName = date.toLocaleString('en-US', { month: 'long' });
       }),
       withLatestFrom(store.select(getUserId)),
-      switchMap(([month, user]) =>
-        monthsService.getMonth(month).pipe(map(data => new Month(data)))
+      switchMap(([month, userId]) =>
+        userId
+          ? monthsService
+              .getMonthForUser({ userId, month })
+              .pipe(map(data => new Month(data)))
+          : NEVER
       )
     );
   }

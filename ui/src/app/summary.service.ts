@@ -14,19 +14,8 @@ const defaultSummary: UsersSummary = { trackedMonths: [] };
   providedIn: 'root'
 })
 export class SummaryService {
-  constructor(
-    private readonly auth: AngularFireAuth,
-    private readonly firestore: AngularFirestore
-  ) {}
+  constructor(private readonly firestore: AngularFirestore) {}
 
-  getSummary(): Observable<UsersSummary> {
-    return this.auth.user.pipe(
-      take(1),
-      switchMap(user => {
-        return user ? this.getSummaryForUser(user.uid) : of(defaultSummary);
-      })
-    );
-  }
   getSummaryForUser(user: string): Observable<UsersSummary> {
     return this.doc(user)
       .snapshotChanges()

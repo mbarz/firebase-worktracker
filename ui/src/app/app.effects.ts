@@ -11,6 +11,7 @@ import { ItemDTO } from './item';
 import { ItemsService } from './items.service';
 import { MonthsService } from './months.service';
 import { SummaryService } from './summary.service';
+import { NEVER } from 'rxjs';
 
 @Injectable()
 export class AppEffects {
@@ -43,29 +44,22 @@ export class AppEffects {
     this.actions$.pipe(
       ofType(actions.setUser),
       map(({ user }) => user),
-      filter(inputIsTruthy),
-      switchMap(user => {
-        const date = new Date();
-        const iso = date.toISOString().substring(0, 10);
-        return this.daysService
-          .getDayForUser(user.uid, iso)
-          .pipe(map(day => actions.receiveCurrentDay({ day })));
-      })
+      switchMap(user => (user ? this.loadCurrentDayForUser(user.uid) : NEVER))
     )
   );
 
   loadCurrentMonth$ = createEffect(() =>
     this.actions$.pipe(
       ofType(actions.setUser),
-      map(({ user }) => user),
-      filter(inputIsTruthy),
-      switchMap(() => {
-        return this.monthsService
-          .getCurrentMonth()
-          .pipe(
-            map(month => actions.receiveCurrentMonth({ month: month.dto }))
-          );
-      })
+      switchMap(({ user }) =>
+        user
+          ? this.monthsService
+              .getCurrentMonthForUser(user.uid)
+              .pipe(
+                map(month => actions.receiveCurrentMonth({ month: month.dto }))
+              )
+          : NEVER
+      )
     )
   );
 
@@ -73,12 +67,13 @@ export class AppEffects {
     this.actions$.pipe(
       ofType(actions.setUser),
       map(({ user }) => user),
-      filter(inputIsTruthy),
-      switchMap(user => {
-        return this.summaryService
-          .getSummaryForUser(user.uid)
-          .pipe(map(summary => actions.receiveSummary({ summary })));
-      })
+      switchMap(user =>
+        user
+          ? this.summaryService
+              .getSummaryForUser(user.uid)
+              .pipe(map(summary => actions.receiveSummary({ summary })))
+          : NEVER
+      )
     )
   );
 
@@ -150,6 +145,14 @@ export class AppEffects {
       ),
     { dispatch: false }
   );
+
+  private loadCurrentDayForUser(uid: string) {
+    const date = new Date();
+    const iso = date.toISOString().substring(0, 10);
+    return this.daysService
+      .getDayForUser(uid, iso)
+      .pipe(map(day => actions.receiveCurrentDay({ day })));
+  }
 }
 
 function inputIsTruthy<T>(input: null | undefined | T): input is T {

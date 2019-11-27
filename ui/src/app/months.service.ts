@@ -82,22 +82,22 @@ export class Month {
   providedIn: 'root'
 })
 export class MonthsService {
-  constructor(
-    private readonly auth: AngularFireAuth,
-    private readonly firestore: AngularFirestore
-  ) {}
+  constructor(private readonly firestore: AngularFirestore) {}
 
-  public getCurrentMonth(): Observable<Month> {
+  public getCurrentMonthForUser(userId: string): Observable<Month> {
     const now = new Date();
     const month = now.toISOString().substring(0, 7);
-    return this.getMonth(month);
+    return this.getMonthForUser({ userId, month });
   }
 
-  public getMonth(month: string): Observable<Month> {
-    return this.user$().pipe(
-      map(user => this.collection(user.uid)),
-      switchMap(collection => this.getMonthFromCollection(collection, month))
-    );
+  public getMonthForUser({
+    userId,
+    month
+  }: {
+    userId: string;
+    month: string;
+  }): Observable<Month> {
+    return this.getMonthFromCollection(this.collection(userId), month);
   }
 
   private getMonthFromCollection(
@@ -117,13 +117,6 @@ export class MonthsService {
 
   private defaultMonthData(month: string): MonthDTO {
     return { categories: [], days: [], uid: month };
-  }
-
-  private user$() {
-    return this.auth.user.pipe(
-      filter(user => !!user),
-      map(user => user as firebase.User)
-    );
   }
 
   private collection(user: string) {

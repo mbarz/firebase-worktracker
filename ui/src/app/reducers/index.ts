@@ -45,6 +45,7 @@ export function reduceAuth(state: AuthState | undefined, action: Action) {
 
 const appReducer = createReducer<AppState>(
   initialAppState,
+  on(actions.setUser, (s, a) => ({ summary: { trackedMonths: [] } })),
   on(actions.receiveCurrentDay, (s, a) => ({ ...s, currentDay: a.day })),
   on(actions.receiveCurrentMonth, (s, a) => ({ ...s, currentMonth: a.month })),
   on(
