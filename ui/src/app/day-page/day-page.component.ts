@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { NEVER, Observable } from 'rxjs';
-import { map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { map, switchMap, tap, withLatestFrom, filter } from 'rxjs/operators';
 import { Day, DaysService } from '../days.service';
 import { getUserId } from '../selectors';
 
@@ -28,6 +28,7 @@ export class DayPageComponent implements OnInit {
 
   ngOnInit() {
     this.day$ = this.route.params.pipe(
+      filter(p => p.day),
       map(p => p.day as string),
       tap(day => {
         const [y, m, d] = day.split('-').map(part => parseInt(part, 10));

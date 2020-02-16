@@ -28,6 +28,8 @@ export type AppState = {
   summary: UsersSummary;
 };
 export const initialAppState: AppState = { summary: { trackedMonths: [] } };
+export const initialAuthState: AuthState = { user: undefined };
+export const initialState = { app: initialAppState, auth: initialAuthState };
 
 export interface State {
   auth: AuthState;
@@ -35,7 +37,7 @@ export interface State {
 }
 
 const authReducer = createReducer<AuthState>(
-  { user: undefined },
+  initialAuthState,
   on(actions.setUser, (state, action) => ({ ...state, user: action.user }))
 );
 

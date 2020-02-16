@@ -3,7 +3,7 @@ import { Month, MonthsService } from '../months.service';
 import { Observable, NEVER } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { ActivatedRoute } from '@angular/router';
-import { map, tap, withLatestFrom, switchMap } from 'rxjs/operators';
+import { map, tap, withLatestFrom, switchMap, filter } from 'rxjs/operators';
 import { getUserId } from '../selectors';
 
 @Component({
@@ -23,6 +23,7 @@ export class MonthPageComponent implements OnInit {
     monthsService: MonthsService
   ) {
     this.month$ = route.params.pipe(
+      filter(p => p.month),
       map(p => p.month as string),
       tap(month => {
         const [y, m] = month.split('-').map(part => parseInt(part, 10));

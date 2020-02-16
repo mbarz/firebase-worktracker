@@ -7,6 +7,7 @@ import { Day } from '../days.service';
 import { MaterialModule } from '../material/material.module';
 import { Month } from '../months.service';
 import { DashboardComponent } from './dashboard.component';
+import { initialState } from './../reducers';
 
 @Component({ selector: 'app-day-card', template: `` })
 class DayCardStubComponent {
@@ -25,7 +26,7 @@ describe('DashboardComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MaterialModule, NoopAnimationsModule, RouterModule],
-      providers: [provideMockStore()],
+      providers: [provideMockStore({ initialState })],
       declarations: [
         DashboardComponent,
         DayCardStubComponent,

@@ -1,10 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { DayCardComponent } from './day-card.component';
-import { MaterialModule } from '../material/material.module';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { DurationPipe } from '../duration.pipe';
 import { provideMockStore } from '@ngrx/store/testing';
+import { DurationPipe } from '../duration.pipe';
+import { MaterialModule } from '../material/material.module';
+import { initialState } from '../reducers';
+import { DayCardComponent } from './day-card.component';
 
 describe('DayCardComponent', () => {
   let component: DayCardComponent;
@@ -13,7 +13,7 @@ describe('DayCardComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MaterialModule, NoopAnimationsModule],
-      providers: [provideMockStore()],
+      providers: [provideMockStore({ initialState })],
       declarations: [DayCardComponent, DurationPipe]
     }).compileComponents();
   }));

@@ -6,6 +6,7 @@ import { MaterialModule } from '../material/material.module';
 import { Month, MonthsService } from '../months.service';
 import { MonthPageComponent } from './month-page.component';
 import { provideMockStore } from '@ngrx/store/testing';
+import { initialState } from './../reducers';
 
 @Component({ selector: 'app-month-card', template: `` })
 class MonthCardStubComponent {
@@ -19,7 +20,10 @@ describe('MonthPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, MaterialModule, NoopAnimationsModule],
-      providers: [provideMockStore(), { provide: MonthsService, useValue: {} }],
+      providers: [
+        provideMockStore({ initialState }),
+        { provide: MonthsService, useValue: {} }
+      ],
       declarations: [MonthPageComponent, MonthCardStubComponent]
     }).compileComponents();
   }));

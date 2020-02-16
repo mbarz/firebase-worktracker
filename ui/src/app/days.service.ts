@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Observable, of, EMPTY, from } from 'rxjs';
-import { map, switchMap, take, tap } from 'rxjs/operators';
+import { EMPTY, from, Observable, of } from 'rxjs';
+import { map, switchMap, take } from 'rxjs/operators';
 import { Item, ItemDTO } from './item';
 import { StoredDay } from './reducers';
 

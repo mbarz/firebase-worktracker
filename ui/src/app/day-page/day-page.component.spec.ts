@@ -1,13 +1,19 @@
 import { Component, Input } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  async,
+  ComponentFixture,
+  fakeAsync,
+  TestBed
+} from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { provideMockStore } from '@ngrx/store/testing';
+import { NEVER } from 'rxjs';
 import { Day, DaysService } from '../days.service';
 import { MaterialModule } from '../material/material.module';
+import { initialState, State } from '../reducers';
 import { DayPageComponent } from './day-page.component';
-import { of } from 'rxjs';
 
 @Component({ selector: 'app-day-card', template: `` })
 class DayCardStubComponent {
@@ -22,10 +28,10 @@ describe('DayPageComponent', () => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, MaterialModule, NoopAnimationsModule],
       providers: [
-        provideMockStore(),
+        provideMockStore<State>({ initialState }),
         {
           provide: ActivatedRoute,
-          useValue: { params: of({ day: '2019-10-10' }) }
+          useValue: { params: NEVER }
         },
         { provide: DaysService, useValue: {} }
       ],
@@ -39,7 +45,7 @@ describe('DayPageComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create', fakeAsync(() => {
     expect(component).toBeTruthy();
-  });
+  }));
 });

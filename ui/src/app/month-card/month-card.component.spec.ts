@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { provideMockStore } from '@ngrx/store/testing';
@@ -20,7 +21,8 @@ describe('MonthCardComponent', () => {
         provideMockStore<State>({
           initialState: { app: { summary: { trackedMonths: [] } }, auth: {} }
         }),
-        { provide: DaysService, useValue: {} }
+        { provide: DaysService, useValue: {} },
+        { provide: MatDialog, useValue: {} }
       ],
       declarations: [MonthCardComponent, DurationPipe]
     }).compileComponents();
