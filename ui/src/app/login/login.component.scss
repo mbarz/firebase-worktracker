@@ -1,3 +1,5 @@
+@import './../../theme';
+
 .login-card {
   position: absolute;
   top: 50%;
@@ -8,6 +10,14 @@
   -ms-transform: translate(-50%, -50%);
   -o-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+}
+
+.login-icon {
+  background: mat-color($primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .login-methods {

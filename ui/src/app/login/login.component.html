@@ -1,16 +1,23 @@
 <mat-card class="login-card">
   <mat-card-header>
-    <mat-card-title>Login</mat-card-title>
+    <div mat-card-avatar class="login-icon"><mat-icon>lock</mat-icon></div>
+    <mat-card-title>Sign In</mat-card-title>
+    <mat-card-subtitle>
+      Sign in with your favorite authentication provider
+    </mat-card-subtitle>
   </mat-card-header>
+  <img mat-card-image src="./assets/notebook.jpg" alt="notebook" />
+  <mat-card-content>
+    <p>Welcome to my little worktracker. Feel free to log and try out</p>
+  </mat-card-content>
   <mat-card-actions class="login-methods">
     <button
       *ngFor="let method of loginMethods"
-      mat-button
+      mat-icon-button
       (click)="method.fn()"
       [ngClass]="method.key"
     >
       <mat-icon fontSet="fab" [fontIcon]="method.icon"></mat-icon>
-      {{ method.text }}
     </button>
   </mat-card-actions>
 </mat-card>
