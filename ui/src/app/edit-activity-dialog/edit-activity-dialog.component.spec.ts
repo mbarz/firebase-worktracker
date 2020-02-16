@@ -4,7 +4,7 @@ import { EditActivityDialogComponent } from './edit-activity-dialog.component';
 import { MaterialModule } from '../material/material.module';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 describe('EditActivityDialogComponent', () => {
   let component: EditActivityDialogComponent;

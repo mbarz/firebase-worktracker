@@ -4,7 +4,7 @@ import { AdjustDayTargetDialogComponent } from './adjust-day-target-dialog.compo
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../material/material.module';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 describe('AdjustDayTargetDialogComponent', () => {
   let component: AdjustDayTargetDialogComponent;
